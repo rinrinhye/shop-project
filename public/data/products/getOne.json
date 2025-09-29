@@ -1,0 +1,22 @@
+{
+	"id": 159,
+	"title": "Elegant Solid Wood Dining Table",
+	"slug": "elegant-solid-wood-dining-table",
+	"price": 67,
+	"description": "Enhance your dining space with this sleek, contemporary dining table, crafted from high-quality solid wood with a warm finish. Its sturdy construction and minimalist design make it a perfect addition for any home looking for a touch of elegance. Accommodates up to six guests comfortably and includes a striking fruit bowl centerpiece. The overhead lighting is not included.",
+	"category": {
+		"id": 53,
+		"name": "Furniture",
+		"slug": "furniture",
+		"image": "https://i.imgur.com/Qphac99.jpeg",
+		"creationAt": "2025-09-29T06:15:59.000Z",
+		"updatedAt": "2025-09-29T06:15:59.000Z"
+	},
+	"images": [
+		"https://i.imgur.com/4lTaHfF.jpeg",
+		"https://i.imgur.com/JktHE1C.jpeg",
+		"https://i.imgur.com/cQeXQMi.jpeg"
+	],
+	"creationAt": "2025-09-29T06:16:04.000Z",
+	"updatedAt": "2025-09-29T06:16:04.000Z"
+}
