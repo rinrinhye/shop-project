@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@utility mobile-only {
+	@apply md:hidden;
+}
+
+@utility desktop-only {
+	@apply hidden lg:block;
+}
+
+@utility desktop-hidden {
+	@apply lg:hidden;
+}
