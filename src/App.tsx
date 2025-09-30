@@ -11,7 +11,7 @@ export default function App() {
 		<Routes>
 			<Route path='/' element={<RootLayout />}>
 				<Route index element={<Home />} />
-				<Route path='products' element={<Products />} />
+				<Route path='products/category/:categorySlug' element={<Products />} />
 				<Route path='products/:id' element={<ProductDetail />} />
 				<Route path='cart' element={<Cart />} />
 				<Route path='*' element={<NotFound />} />
@@ -19,3 +19,19 @@ export default function App() {
 		</Routes>
 	);
 }
+
+/* 
+🐝 category vs :id 충돌 주의!
+
+	기존 : 
+	카테고리 'products/:category'
+	상품상세 'products/:id'
+
+	변경	: 
+	카테고리 'products/category/:category'
+	상품상세 'products/:id'
+
+	-----------------------------------------------
+	존재하는 값으로만 이동 가능하게 수정 필요!
+
+*/
