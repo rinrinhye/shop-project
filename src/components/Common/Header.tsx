@@ -1,19 +1,20 @@
 import {useQuery} from "@tanstack/react-query";
 import {CiShoppingCart, CiUser, CiMenuBurger} from "react-icons/ci";
-import {getCategoriesQuery} from "../api/categories";
-import {Link} from "react-router";
-
-interface Category {
-	id: number;
-	name: string;
-	slug: string;
-	image: string;
-	creationAt: string;
-	updatedAt: string;
-}
+import {getCategoriesQuery} from "../../queries/queries";
+import {Link, useNavigate} from "react-router";
+import type {Category} from "../../types/common";
 
 const Header = () => {
 	const {data: categories = [], isLoading} = useQuery<Category[]>(getCategoriesQuery());
+
+	const navigate = useNavigate();
+
+	const handleUserButton = () => {
+		const token = localStorage.getItem("token");
+		if (!token) {
+			navigate("/login");
+		}
+	};
 
 	if (isLoading) return;
 
@@ -22,8 +23,10 @@ const Header = () => {
 			<button type='button' className='mobile-only'>
 				<CiMenuBurger />
 			</button>
-			<h1>shop</h1>
-			<nav className='desktop-only'>
+			<h1>
+				<Link to='/'>shop</Link>
+			</h1>
+			<nav className='mobile-hidden'>
 				<ul className='flex gap-2'>
 					{categories.map((category) => (
 						<li key={category.id}>
@@ -33,7 +36,7 @@ const Header = () => {
 				</ul>
 			</nav>
 			<div>
-				<button type='button'>
+				<button type='button' onClick={handleUserButton}>
 					<CiUser />
 				</button>
 				<button type='button'>

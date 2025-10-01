@@ -5,6 +5,7 @@ import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
 
 export default function App() {
 	return (
@@ -16,6 +17,7 @@ export default function App() {
 				<Route path='cart' element={<Cart />} />
 				<Route path='*' element={<NotFound />} />
 			</Route>
+			<Route path='/login' element={<Login />} />
 		</Routes>
 	);
 }
