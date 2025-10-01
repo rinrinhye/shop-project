@@ -11,3 +11,7 @@
 @utility desktop-hidden {
 	@apply lg:hidden;
 }
+
+@utility mobile-hidden {
+	@apply hidden md:block;
+}
