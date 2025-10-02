@@ -6,18 +6,23 @@ import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import {ROUTES} from "./routes/routes";
+import User from "./pages/User";
 
 export default function App() {
 	return (
 		<Routes>
-			<Route path='/' element={<RootLayout />}>
+			<Route path={ROUTES.home} element={<RootLayout />}>
 				<Route index element={<Home />} />
+				<Route path='user/:userId' element={<User />} />
 				<Route path='products/category/:categorySlug' element={<Products />} />
-				<Route path='products/:id' element={<ProductDetail />} />
-				<Route path='cart' element={<Cart />} />
+				<Route path='/products/:id' element={<ProductDetail />} />
+				<Route path={ROUTES.cart} element={<Cart />} />
 				<Route path='*' element={<NotFound />} />
 			</Route>
-			<Route path='/login' element={<Login />} />
+			<Route path={ROUTES.login} element={<Login />} />
+			<Route path={ROUTES.register} element={<Register />} />
 		</Routes>
 	);
 }

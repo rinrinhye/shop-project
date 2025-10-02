@@ -1,19 +1,19 @@
-import {useQuery} from "@tanstack/react-query";
-import {CiShoppingCart, CiUser, CiMenuBurger} from "react-icons/ci";
-import {getCategoriesQuery} from "../../queries/queries";
 import {Link, useNavigate} from "react-router";
+import {ROUTES} from "../../routes/routes";
+import {useCurrentUser} from "../../queries/useAuth";
+import {useCategories} from "../../queries/useProducts";
 import type {Category} from "../../types/common";
+import {CiShoppingCart, CiUser, CiMenuBurger} from "react-icons/ci";
 
 const Header = () => {
-	const {data: categories = [], isLoading} = useQuery<Category[]>(getCategoriesQuery());
+	const {data: categories = [], isLoading} = useCategories();
 
 	const navigate = useNavigate();
 
+	const {data: user} = useCurrentUser();
+
 	const handleUserButton = () => {
-		const token = localStorage.getItem("token");
-		if (!token) {
-			navigate("/login");
-		}
+		navigate(ROUTES.user(user.id));
 	};
 
 	if (isLoading) return;
@@ -28,17 +28,25 @@ const Header = () => {
 			</h1>
 			<nav className='mobile-hidden'>
 				<ul className='flex gap-2'>
-					{categories.map((category) => (
+					{categories.map((category: Category) => (
 						<li key={category.id}>
-							<Link to={`/products/category/${category.slug}`}>{category.name}</Link>
+							<Link to={ROUTES.products(category.slug)}>{category.name}</Link>
 						</li>
 					))}
 				</ul>
 			</nav>
 			<div>
-				<button type='button' onClick={handleUserButton}>
-					<CiUser />
-				</button>
+				{!user && (
+					<>
+						<Link to={ROUTES.login}>login</Link>
+						<Link to={ROUTES.register}>join</Link>
+					</>
+				)}
+				{user && (
+					<button type='button' onClick={handleUserButton}>
+						<CiUser />
+					</button>
+				)}
 				<button type='button'>
 					<CiShoppingCart />
 				</button>

@@ -1,12 +1,10 @@
-import {useQuery} from "@tanstack/react-query";
-import {getProductsQuery} from "../queries/queries";
 import {useParams} from "react-router";
-import type {Product} from "../types/common";
+import {useProducts} from "../queries/useProducts";
 
 const ProductDetail = () => {
 	const {id} = useParams();
 
-	const {data: product, isLoading} = useQuery<Product>(getProductsQuery({id}));
+	const {data: product, isLoading} = useProducts({id});
 
 	if (isLoading || !product) return null;
 
@@ -14,7 +12,7 @@ const ProductDetail = () => {
 	return (
 		<div className='flex'>
 			<div>
-				{images.map((image, index) => (
+				{images.map((image: string, index: number) => (
 					<div key={index}>
 						<img src={image} />
 					</div>

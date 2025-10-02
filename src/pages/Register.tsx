@@ -1,16 +1,21 @@
 import {useState} from "react";
 import {Link} from "react-router";
-import type {LoginInput} from "../types/common";
+import type {RegisterInput} from "../types/common";
 import {ROUTES} from "../routes/routes";
-import {useLogin} from "../queries/useAuth";
+import {useRegister} from "../queries/useAuth";
 
-const Login = () => {
-	const [{email, password}, setValue] = useState<LoginInput>({
+const Register = () => {
+	const [value, setValue] = useState<RegisterInput>({
+		name: "",
 		email: "",
 		password: "",
+		role: "customer",
+		avatar: "https://cdn-icons-png.flaticon.com/512/1077/1077114.png",
 	});
 
-	const {mutate} = useLogin();
+	const {name, email, password} = value;
+
+	const {mutate, isError, error} = useRegister();
 
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const name = e.target.name;
@@ -21,16 +26,20 @@ const Login = () => {
 		});
 	};
 
-	const login = (e: React.FormEvent<HTMLFormElement>) => {
+	const register = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		mutate({email, password});
+		mutate(value);
 	};
 
 	return (
 		<div>
-			<form action='' onSubmit={login} method='POST'>
-				<p>로그인</p>
+			<form action='' onSubmit={register} method='POST'>
+				<p>회원가입</p>
 				<div className='flex flex-col gap-4'>
+					<div className='border-1'>
+						<label htmlFor='name'>name</label>
+						<input type='name' value={name} onChange={handleInput} name='name' id='name'></input>
+					</div>
 					<div className='border-1'>
 						<label htmlFor='email'>email</label>
 						<input type='email' value={email} onChange={handleInput} name='email' id='email'></input>
@@ -45,11 +54,11 @@ const Login = () => {
 							id='password'></input>
 					</div>
 				</div>
-				<button type='submit'>로그인</button>
+				<button type='submit'>회원가입</button>
 			</form>
-			<Link to={ROUTES.register}>회원가입</Link>
+			<Link to={ROUTES.login}>로그인</Link>
 		</div>
 	);
 };
 
-export default Login;
+export default Register;
