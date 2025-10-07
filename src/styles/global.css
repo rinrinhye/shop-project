@@ -1,17 +1,72 @@
 @import "tailwindcss";
 
-@utility mobile-only {
-	@apply md:hidden;
+@layer base {
+  body {
+    @apply font-sans;
+  }
+
+  button {
+    cursor: pointer;
+  }
 }
 
-@utility desktop-only {
-	@apply hidden lg:block;
+@layer components {
+  .main {
+    @apply pt-4 px-4 md:px-8 lg:px-20;
+  }
+
+  .product-list {
+    @apply grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4 lg:gap-6;
+  }
+
+  .button {
+    font-family: "Outfit", sans-serif;
+    @apply border border-[#ededed] rounded-md text-[#2a2a2a];
+  }
+
+  .button-sm {
+    @apply h-8 text-xs px-3;
+  }
+
+  .button-md {
+    @apply h-10 text-sm px-4;
+  }
+
+  .button-lg {
+    @apply h-12 px-4;
+  }
+
+  input[type="checkbox"] {
+    background-image: url(../assets/icons/checkbox_off.png);
+    width: 24px;
+    height: 24px;
+    appearance: none;
+    cursor: pointer;
+
+    &:checked {
+      background-image: url(../assets/icons/checkbox_on.png);
+    }
+  }
 }
 
-@utility desktop-hidden {
-	@apply lg:hidden;
-}
+@layer utilities {
+  .mobile-only {
+    @apply md:hidden;
+  }
 
-@utility mobile-hidden {
-	@apply hidden md:block;
+  .desktop-only {
+    @apply hidden lg:block;
+  }
+
+  .desktop-hidden {
+    @apply lg:hidden;
+  }
+
+  .mobile-hidden {
+    @apply hidden md:block;
+  }
+
+  .form-checkbox {
+    @apply flex items-center gap-2;
+  }
 }
