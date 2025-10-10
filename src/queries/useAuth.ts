@@ -1,7 +1,7 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {useNavigate} from "react-router";
-import {getCurrentUser, postLogin, postRegister} from "../api/auth";
-import type {LoginInput, RegisterInput} from "../types/common";
+import {getCurrentUser, postEmailAvailable, postLogin, postRegister} from "../api/auth";
+import type {LoginInput, RegisterInput, RegisterPayload} from "../types/common";
 import {ROUTES} from "../routes/routes";
 
 export const useLogin = () => {
@@ -10,11 +10,23 @@ export const useLogin = () => {
 	return useMutation({
 		mutationFn: (value: LoginInput) => postLogin(value),
 		onSuccess: (data) => {
-			console.log(data);
-			localStorage.setItem("access_token", data.access_token);
-			navigate(ROUTES.home);
+			if (data) {
+				localStorage.setItem("access_token", data.access_token);
+				navigate(ROUTES.home);
+			}
 		},
+		onError: (error, _variables, ctx) => {},
 	});
+};
+
+export const useLogout = () => {
+	const qc = useQueryClient();
+
+	return () => {
+		localStorage.removeItem("access_token");
+		qc.setQueryData(["currentUser"], null);
+		qc.removeQueries({queryKey: ["currentUser"]});
+	};
 };
 
 export const useRegister = () => {
@@ -22,23 +34,20 @@ export const useRegister = () => {
 	const navigate = useNavigate();
 
 	return useMutation({
-		mutationFn: async (value: RegisterInput) => {
-			const res = await postRegister(value);
-
-			if (!res.ok) {
-				const body = await res.json();
-				throw new Error(body.message);
-			}
+		mutationFn: async (value: RegisterPayload) => {
+			const data = await postRegister(value);
 
 			const {access_token} = await postLogin({email: value.email, password: value.password});
 			localStorage.setItem("access_token", access_token);
 
-			return await res.json();
+			return data;
 		},
 		onSuccess: () => {
 			qc.invalidateQueries({queryKey: ["currentUser"]});
 			navigate(ROUTES.home);
 		},
+
+		onError: (error, _variables, ctx) => {},
 	});
 };
 
@@ -49,5 +58,15 @@ export const useCurrentUser = () => {
 		queryKey: ["currentUser"],
 		queryFn: () => getCurrentUser(token!),
 		enabled: !!token,
+	});
+};
+
+export const useEmailAvailable = () => {
+	return useMutation({
+		mutationFn: async (email: RegisterInput["email"]) => {
+			const data = await postEmailAvailable(email);
+
+			return data;
+		},
 	});
 };

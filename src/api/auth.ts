@@ -1,4 +1,4 @@
-import type {LoginInput, RegisterInput} from "../types/common";
+import type {LoginInput, RegisterInput, RegisterPayload} from "../types/common";
 
 const BASE_URL = "https://api.escuelajs.co/api/v1";
 
@@ -13,7 +13,13 @@ export const postLogin = async (value: LoginInput) => {
 		body: JSON.stringify(value),
 	});
 
-	return res.json();
+	const body = await res.json();
+
+	if (!res.ok) {
+		throw body;
+	}
+
+	return body;
 };
 
 export const getCurrentUser = async (token: string) => {
@@ -23,15 +29,16 @@ export const getCurrentUser = async (token: string) => {
 		headers: {Authorization: `Bearer ${token}`},
 	});
 
+	const body = await res.json();
+
 	if (!res.ok) {
-		const err = await res.json();
-		throw new Error(err.message || "Unauthorized");
+		throw body;
 	}
 
-	return res.json();
+	return body;
 };
 
-export const postRegister = async (value: RegisterInput) => {
+export const postRegister = async (value: RegisterPayload) => {
 	const url = BASE_URL + "/users/";
 
 	const res = await fetch(url, {
@@ -42,5 +49,28 @@ export const postRegister = async (value: RegisterInput) => {
 		body: JSON.stringify(value),
 	});
 
-	return res.json();
+	const body = await res.json();
+
+	if (!res.ok) {
+		throw body;
+	}
+
+	return body;
+};
+
+export const postEmailAvailable = async (email: RegisterInput["email"]) => {
+	const url = BASE_URL + "/users/is-available";
+	const res = await fetch(url, {
+		method: "POST",
+		headers: {"Content-Type": "application/json"},
+		body: JSON.stringify({email}),
+	});
+
+	const body = await res.json();
+
+	if (!res.ok) {
+		throw body;
+	}
+
+	return body;
 };
