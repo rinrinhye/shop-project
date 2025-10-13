@@ -1,0 +1,10 @@
+.product-swiper {
+	.swiper-wrapper {
+	}
+}
+
+.thumbnail-swiper {
+	.swiper-wrapper {
+		@apply !w-[clamp(80px,20vw,120px)];
+	}
+}

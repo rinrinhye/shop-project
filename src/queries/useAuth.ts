@@ -15,7 +15,6 @@ export const useLogin = () => {
 				navigate(ROUTES.home);
 			}
 		},
-		onError: (error, _variables, ctx) => {},
 	});
 };
 
@@ -46,8 +45,6 @@ export const useRegister = () => {
 			qc.invalidateQueries({queryKey: ["currentUser"]});
 			navigate(ROUTES.home);
 		},
-
-		onError: (error, _variables, ctx) => {},
 	});
 };
 

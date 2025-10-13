@@ -24,8 +24,6 @@ const Register = () => {
 		error: emailAvailableError,
 	} = useEmailAvailable();
 
-	console.log(error);
-
 	useEffect(() => {
 		/* 
 		

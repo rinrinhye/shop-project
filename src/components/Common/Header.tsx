@@ -54,11 +54,14 @@ const Header = () => {
 				</h1>
 				<nav className='mobile-hidden'>
 					<ul className='flex md:gap-3 lg:gap-4'>
-						{categories.map((category: Category) => (
-							<li key={category.id}>
-								<Link to={ROUTES.products(category.slug)}>{category.name}</Link>
-							</li>
-						))}
+						{categories.map((category: Category, i: number) => {
+							if (i > 4) return;
+							return (
+								<li key={category.id}>
+									<Link to={ROUTES.products(category.slug)}>{category.name}</Link>
+								</li>
+							);
+						})}
 					</ul>
 				</nav>
 				<div className='h-full flex items-center gap-3 md:gap-4 lg:gap-6'>
