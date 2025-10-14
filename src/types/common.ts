@@ -12,12 +12,7 @@ export interface RegisterInput {
 	avatar: string;
 }
 
-export interface RegisterPayload {
-	name: string;
-	email: string;
-	password: string;
-	avatar: string;
-}
+export type RegisterPayload = Omit<RegisterInput, "confirmPassword" | "role">;
 
 export interface Category {
 	id: number;
@@ -34,14 +29,7 @@ export interface Product {
 	slug: string;
 	price: number;
 	description: string;
-	category: {
-		id: number;
-		name: String;
-		slug: String;
-		image: String;
-		creationAt: String;
-		updatedAt: String;
-	};
+	category: Category;
 	images: Array<string>;
 	creationAt: string;
 	updatedAt: string;

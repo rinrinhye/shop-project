@@ -1,20 +1,20 @@
-import {useParams} from "react-router";
-import {Swiper, SwiperSlide} from "swiper/react";
-import {useProducts} from "../queries/useProducts";
-import {useState} from "react";
-import {FreeMode, Navigation, Thumbs} from "swiper/modules";
-import type {Swiper as SwiperType} from "swiper";
-import {IoChevronDown, IoChevronUp, IoHeartOutline} from "react-icons/io5";
+import { useParams } from "react-router";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { useProducts } from "../queries/useProducts";
+import { useState } from "react";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 const ProductDetail = () => {
-	const {id} = useParams();
+	const { id } = useParams();
 
-	const {data: product, isLoading} = useProducts({id});
+	const { data: product, isLoading } = useProducts({ id });
 	const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 	const [isOpen, setOpen] = useState<boolean>(false);
 
 	if (isLoading || !product) return null;
 
-	const {title, description, price, images} = product;
+	const { title, description, price, images } = product;
 
 	console.log(product);
 
@@ -25,7 +25,7 @@ const ProductDetail = () => {
 					<div className='lg:min-w-[400px]'>
 						<Swiper
 							slidesPerView={1}
-							thumbs={{swiper: thumbsSwiper}}
+							thumbs={{ swiper: thumbsSwiper }}
 							modules={[FreeMode, Thumbs, Navigation]}
 							className='product-swiper'>
 							{images.map((image: string, index: number) => (
@@ -44,10 +44,10 @@ const ProductDetail = () => {
 							slidesPerView={"auto"}
 							spaceBetween={8}
 							breakpoints={{
-								1024: {direction: "vertical"},
+								1024: { direction: "vertical" },
 							}}
 							className='thumbnail-swiper'>
-							{images.map((image: string, index: number) => (
+							{images.map((image: string) => (
 								<SwiperSlide>
 									<div className='overflow-hidden rounded-xl'>
 										<img src={image} alt='' className='' />

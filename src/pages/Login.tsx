@@ -1,34 +1,34 @@
-import {useState} from "react";
-import {Link} from "react-router";
-import type {LoginInput} from "../types/common";
-import {ROUTES} from "../routes/routes";
-import {useLogin} from "../queries/useAuth";
-import {IoCloseCircleSharp} from "react-icons/io5";
+import { useState } from "react";
+import { Link } from "react-router";
+import type { LoginInput } from "../types/common";
+import { ROUTES } from "../routes/routes";
+import { useLogin } from "../queries/useAuth";
+import { IoCloseCircleSharp } from "react-icons/io5";
 
 const Login = () => {
-	const [{email, password}, setValue] = useState<LoginInput>({
+	const [{ email, password }, setValue] = useState<LoginInput>({
 		email: "",
 		password: "",
 	});
 
-	const {mutate, error} = useLogin();
+	const { mutate } = useLogin();
 
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const name = e.target.name;
 		const value = e.target.value;
 
 		setValue((prev) => {
-			return {...prev, [name]: value};
+			return { ...prev, [name]: value };
 		});
 	};
 
 	const login = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		mutate({email, password});
+		mutate({ email, password });
 	};
 
 	const deleteValue = (key: keyof LoginInput) => {
-		setValue((prev) => ({...prev, [key]: ""}));
+		setValue((prev) => ({ ...prev, [key]: "" }));
 	};
 
 	return (

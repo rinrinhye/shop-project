@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import {Link} from "react-router";
-import type {RegisterInput} from "../types/common";
-import {ROUTES} from "../routes/routes";
-import {useEmailAvailable, useRegister} from "../queries/useAuth";
+import { useState } from "react";
+import { Link } from "react-router";
+import type { RegisterInput } from "../types/common";
+import { ROUTES } from "../routes/routes";
+import { useEmailAvailable, useRegister } from "../queries/useAuth";
 
 const Register = () => {
 	const [value, setValue] = useState<RegisterInput>({
@@ -13,19 +13,19 @@ const Register = () => {
 		role: "customer",
 		avatar: "https://cdn-icons-png.flaticon.com/512/1077/1077114.png",
 	});
-	const {name, email, password, confirmPassword, avatar} = value;
-	const [passwordDirty, setPasswordDirty] = useState(false);
-	const [errorMessages, setErrorMessages] = useState({name: "", email: "", password: "", confirmPassword: ""});
+	const { name, email, password, confirmPassword, avatar } = value;
+	// const [passwordDirty, setPasswordDirty] = useState(false);
+	const [errorMessages] = useState({ name: "", email: "", password: "", confirmPassword: "" });
 
-	const {mutate, isError, error} = useRegister();
+	const { mutate } = useRegister();
 	const {
 		mutate: checkEmailAvailable,
-		isError: isEmailAvailableError,
-		error: emailAvailableError,
+		// isError: isEmailAvailableError,
+		// error: emailAvailableError,
 	} = useEmailAvailable();
 
-	useEffect(() => {
-		/* 
+	// useEffect(() => {
+	/* 
 		
 		상황	showMismatch 여부
     password, confirm 둘 다 안 건드림	    ❌ 숨김
@@ -38,21 +38,21 @@ const Register = () => {
 			setErrorMessages((prev) => ({...prev, confirmPassword: ""}));
 
 		*/
-	}, [password, confirmPassword, passwordDirty]);
+	// }, [password, confirmPassword, passwordDirty]);
 
 	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const name = e.target.name;
 		const value = e.target.value;
 
 		setValue((prev) => {
-			return {...prev, [name]: value};
+			return { ...prev, [name]: value };
 		});
 	};
 
 	const register = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const payload = {name, email, password, avatar};
+		const payload = { name, email, password, avatar };
 		mutate(payload);
 	};
 
