@@ -1,5 +1,10 @@
 @import "tailwindcss";
-
-@import "./global.css";
 @import "./swiper.css";
 @import "./icons.css";
+
+@import "./global.css";
+
+@import "./layouts.css";
+
+@import "./components/button.css";
+@import "./components/input.css";

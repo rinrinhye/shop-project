@@ -1,0 +1,55 @@
+@layer components {
+	input[type="checkbox"] {
+		background-image: url(../assets/icons/checkbox_off.png);
+		width: 24px;
+		height: 24px;
+		appearance: none;
+		cursor: pointer;
+
+		&:checked {
+			background-image: url(../assets/icons/checkbox_on.png);
+		}
+	}
+
+	.form-login {
+		@apply relative border rounded-t-lg border-[#e2e2e2] h-16 w-84;
+
+		input {
+			@apply h-full w-full px-3.5 pt-4.5;
+		}
+
+		label {
+			@apply absolute top-1/2 left-4 -translate-y-1/2 text-[#8e8e8e] transition-all;
+			@apply peer-focus:scale-75 peer-focus:-translate-x-2 peer-focus:-translate-y-6;
+			@apply peer-[&:not(:placeholder-shown)]:scale-75
+            peer-[&:not(:placeholder-shown)]:-translate-x-2
+            peer-[&:not(:placeholder-shown)]:-translate-y-6;
+		}
+
+		button {
+			@apply hidden absolute top-1/2 -translate-y-1/2 right-3.5;
+			@apply peer-[&:not(:placeholder-shown)]:block;
+		}
+	}
+
+	.form-login:first-of-type:last-of-type {
+		@apply rounded-sm;
+	}
+
+	.form-login + .form-login {
+		@apply border-t-0 rounded-t-none rounded-b-lg;
+	}
+
+	.form-join {
+		@apply w-84 text-left text-[#777];
+
+		label {
+			@apply block;
+		}
+
+		input {
+			@apply h-10 pt-2 border-b-1 border-[#666] w-full outline-none;
+			@apply focus-visible:border-b-2;
+		}
+	}
+}
