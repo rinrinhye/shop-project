@@ -1,4 +1,4 @@
-import type {LoginInput, RegisterInput, RegisterPayload} from "../types/common";
+import type { LoginInput, RegisterInput, RegisterPayload } from "../types/common";
 
 const BASE_URL = "https://api.escuelajs.co/api/v1";
 
@@ -26,7 +26,7 @@ export const getCurrentUser = async (token: string) => {
 	let url = BASE_URL + `/auth/profile`;
 
 	const res = await fetch(url, {
-		headers: {Authorization: `Bearer ${token}`},
+		headers: { Authorization: `Bearer ${token}` },
 	});
 
 	const body = await res.json();
@@ -62,8 +62,8 @@ export const postEmailAvailable = async (email: RegisterInput["email"]) => {
 	const url = BASE_URL + "/users/is-available";
 	const res = await fetch(url, {
 		method: "POST",
-		headers: {"Content-Type": "application/json"},
-		body: JSON.stringify({email}),
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ email }),
 	});
 
 	const body = await res.json();
@@ -71,6 +71,18 @@ export const postEmailAvailable = async (email: RegisterInput["email"]) => {
 	if (!res.ok) {
 		throw body;
 	}
+
+	return body;
+};
+
+export const putUserInfo = async ({ id, newInfo }: { id: string; newInfo: Record<string, any> }) => {
+	const url = BASE_URL + `${id}`;
+	const res = await fetch(url, {
+		method: "PUT",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(newInfo),
+	});
+	const body = await res.json();
 
 	return body;
 };
