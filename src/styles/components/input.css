@@ -15,7 +15,7 @@
 		@apply relative border rounded-t-lg border-[#e2e2e2] h-16 w-84;
 
 		input {
-			@apply h-full w-full px-3.5 pt-4.5;
+			@apply h-full w-full pl-3.5 pr-12 pt-4.5;
 		}
 
 		label {
