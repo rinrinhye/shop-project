@@ -51,5 +51,9 @@
 			@apply h-10 pt-2 border-b-1 border-[#666] w-full outline-none;
 			@apply focus-visible:border-b-2;
 		}
+
+		p {
+			@apply mt-1 text-[13px] text-red-500;
+		}
 	}
 }
