@@ -4,6 +4,7 @@ import type { RegisterInput } from "../types/common";
 import { ROUTES } from "../routes/routes";
 import { useEmailAvailable, useRegister } from "../queries/useAuth";
 import { useForm } from "react-hook-form";
+import { isValidEmail } from "../utils/isValidEmail";
 
 const Register = () => {
 	// const [value, setValue] = useState<RegisterInput>({
@@ -17,17 +18,19 @@ const Register = () => {
 	// const { name, email, password, confirmPassword, avatar } = value;
 
 	const { mutate } = useRegister();
-	const { mutate: checkEmailAvailable, data: isEmailAvailable, isError: isEmailError } = useEmailAvailable();
+	const { mutate: checkEmail, data: isEmailAvailable } = useEmailAvailable();
 
 	const {
 		register,
 		getValues,
 		handleSubmit,
 		setError,
+		trigger,
 		watch,
 		clearErrors,
 		formState: { errors },
 	} = useForm({
+		// mode: "onChange",
 		defaultValues: {
 			name: "",
 			email: "",
@@ -44,23 +47,26 @@ const Register = () => {
 		// mutate(payload);
 	};
 
-	const checkEmail = () => {
-		if (errors.email) {
-			console.log(errors);
-		}
+	const handleCheckEmail = async () => {
+		const valid = await trigger("email");
+		if (!valid) return;
 
 		const email = getValues("email");
-		checkEmailAvailable(email);
+
+		checkEmail(email);
 	};
 
 	useEffect(() => {
-		// 400 : 이메일 형식 지켜라
-		// 201 : isAvailable false truue
+		if (!isEmailAvailable) return;
 
-		if (isEmailError) {
+		const isAvailable = isEmailAvailable.isAvailable;
+
+		if (!isAvailable) {
 			setError("email", { type: "custom", message: "중복된 이메일 입니다." });
-		} else clearErrors("email");
-	}, [isEmailError]);
+		} else {
+			// clearErrors("email");
+		}
+	}, [isEmailAvailable]);
 
 	console.log(errors);
 
@@ -101,7 +107,7 @@ const Register = () => {
 						<button
 							type='button'
 							className='block button button-sm text-sm ml-auto mr-0 mt-2'
-							onClick={checkEmail}>
+							onClick={handleCheckEmail}>
 							check email
 						</button>
 					</div>
@@ -129,7 +135,10 @@ const Register = () => {
 						{errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
 					</div>
 				</div>
-				<button type='submit' className='button button-xl button-black w-84 font-bold'>
+				<button
+					type='submit'
+					className='button button-xl button-black w-84 font-bold disabled:opacity-40'
+					disabled={isEmailAvailable?.isAvailable ? false : true}>
 					회원가입
 				</button>
 			</form>
