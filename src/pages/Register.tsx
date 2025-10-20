@@ -1,36 +1,23 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import type { RegisterInput } from "../types/common";
+import type { ApiError, RegisterInput } from "../types/common";
 import { ROUTES } from "../routes/routes";
-import { useEmailAvailable, useRegister } from "../queries/useAuth";
+import { useLogin, useRegister } from "../queries/useAuth";
 import { useForm } from "react-hook-form";
-import { isValidEmail } from "../utils/isValidEmail";
 
 const Register = () => {
-	// const [value, setValue] = useState<RegisterInput>({
-	// 	name: "",
-	// 	email: "",
-	// 	password: "",
-	// 	confirmPassword: "",
-	// 	role: "customer",
-	// 	avatar: "https://cdn-icons-png.flaticon.com/512/1077/1077114.png",
-	// });
-	// const { name, email, password, confirmPassword, avatar } = value;
+	const { mutateAsync } = useRegister();
 
-	const { mutate } = useRegister();
-	const { mutate: checkEmail, data: isEmailAvailable } = useEmailAvailable();
+	const { mutateAsync: login } = useLogin();
 
 	const {
 		register,
-		getValues,
 		handleSubmit,
-		setError,
-		trigger,
-		watch,
-		clearErrors,
+		getValues,
 		formState: { errors },
+		setError,
 	} = useForm({
-		// mode: "onChange",
+		mode: "onSubmit",
+		reValidateMode: "onChange",
 		defaultValues: {
 			name: "",
 			email: "",
@@ -41,75 +28,57 @@ const Register = () => {
 		},
 	});
 
-	const onSubmit = (data: RegisterInput) => {
-		console.log(data);
-		// const payload = { name, email, password, avatar };
-		// mutate(payload);
-	};
+	const onSubmit = async (data: RegisterInput) => {
+		const { name, email, password, avatar } = data;
+		const payload = { name, email, password, avatar };
 
-	const handleCheckEmail = async () => {
-		const valid = await trigger("email");
-		if (!valid) return;
+		try {
+			// mutateAsync 로 회원가입 시도 해줌!!!!
+			const data = await mutateAsync(payload);
 
-		const email = getValues("email");
+			if (data) {
+				// 회원가입에서 받은 data 가 있다면 그대로 로그인 시도!!!
+				await login({ email, password });
+			}
+		} catch (error) {
+			const err = error as ApiError;
 
-		checkEmail(email);
-	};
-
-	useEffect(() => {
-		if (!isEmailAvailable) return;
-
-		const isAvailable = isEmailAvailable.isAvailable;
-
-		if (!isAvailable) {
-			setError("email", { type: "custom", message: "중복된 이메일 입니다." });
-		} else {
-			// clearErrors("email");
+			// react form hook 의 setError 사용 -> ui 표시
+			if (err.statusCode === 401) {
+				setError("email", { type: "server", message: "중복된 이메일 입니다." });
+			}
 		}
-	}, [isEmailAvailable]);
-
-	console.log(errors);
-
-	console.log(useForm());
+	};
 
 	return (
 		<div className='main mt-20 text-center'>
 			<h2 className='mb-12 text-3xl font-[Outfit] font-bold'>JOIN</h2>
-			<form action='' onSubmit={handleSubmit(onSubmit)} method='POST' noValidate>
+			<form onSubmit={handleSubmit(onSubmit)} noValidate>
 				<div className='flex flex-col items-center gap-5 mb-12'>
 					<div className='form-join'>
 						<label htmlFor='name'>name</label>
 						<input
-							type='name'
 							id='name'
 							placeholder=' '
 							className='peer'
 							{...register("name", { required: "이름을 입력해 주세요." })}></input>
 						{errors.name && <p>{errors.name.message}</p>}
 					</div>
-					<div className=''>
-						<div className='form-join'>
-							<label htmlFor='email'>email</label>
-							<input
-								type='email'
-								id='email'
-								placeholder=' '
-								className='peer'
-								{...register("email", {
-									required: "이메일을 입력해 주세요.",
-									pattern: {
-										value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-										message: "올바른 이메일 형식이 아닙니다.",
-									},
-								})}></input>
-							{errors.email && <p>{errors.email.message}</p>}
-						</div>
-						<button
-							type='button'
-							className='block button button-sm text-sm ml-auto mr-0 mt-2'
-							onClick={handleCheckEmail}>
-							check email
-						</button>
+					<div className='form-join'>
+						<label htmlFor='email'>email</label>
+						<input
+							type='email'
+							id='email'
+							placeholder=' '
+							className='peer'
+							{...register("email", {
+								required: "이메일을 입력해 주세요.",
+								pattern: {
+									value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+									message: "올바른 이메일 형식이 아닙니다.",
+								},
+							})}></input>
+						{errors.email && <p>{errors.email.message}</p>}
 					</div>
 					<div className='form-join'>
 						<label htmlFor='password'>password</label>
@@ -131,14 +100,14 @@ const Register = () => {
 							id='confirmPassword'
 							placeholder=' '
 							className='peer'
-							{...register("confirmPassword", { required: "비밀번호 확인란을 입력해 주세요." })}></input>
+							{...register("confirmPassword", {
+								required: "비밀번호 확인란을 입력해 주세요.",
+								validate: (v) => v === getValues("password") || "비밀번호가 일치하지 않습니다",
+							})}></input>
 						{errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
 					</div>
 				</div>
-				<button
-					type='submit'
-					className='button button-xl button-black w-84 font-bold disabled:opacity-40'
-					disabled={isEmailAvailable?.isAvailable ? false : true}>
+				<button type='submit' className='button button-xl button-black w-84 font-bold disabled:opacity-40'>
 					회원가입
 				</button>
 			</form>

@@ -35,4 +35,9 @@ export interface Product {
 	updatedAt: string;
 }
 
-export type CartItem = Product & {quantity: number};
+export type CartItem = Product & { quantity: number };
+
+export type ApiError = {
+	statusCode: number;
+	message: string;
+};

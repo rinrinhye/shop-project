@@ -9,23 +9,17 @@ const Login = () => {
 	const emailRef = useRef<HTMLInputElement>(null);
 	const passwordRef = useRef<HTMLInputElement>(null);
 
-	const [errorText, setErrorText] = useState<string>("");
+	const [clientError, setClientError] = useState("");
 	const [caps, setCaps] = useState(false);
-	const errorRef = useRef<string>("");
+	const [pwFocused, setPwFocused] = useState(false);
 
 	const { mutate, error, isError } = useLogin();
-
-	useEffect(() => {
-		if (!caps) {
-			errorRef.current = errorText;
-		}
-	}, [errorText]);
 
 	useEffect(() => {
 		if (!isError || !error) return;
 		const status = (error as any)?.statusCode;
 		if (status === 401) {
-			setErrorText("이메일 또는 비밀번호가 올바르지 않습니다.");
+			setClientError("이메일 또는 비밀번호가 올바르지 않습니다.");
 		}
 	}, [isError, error]);
 
@@ -33,72 +27,54 @@ const Login = () => {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 		const email = (formData.get("email") as string)?.trim();
-		const password = (formData.get("password") as string)?.trim();
+		const password = formData.get("password") as string;
 
 		const active = document.activeElement as HTMLElement;
 		if (active && active.tagName === "INPUT") active.blur();
 
 		if (!email) {
-			setErrorText("이메일을 입력해 주세요.");
+			setClientError("이메일을 입력해 주세요.");
 			return;
 		}
 
 		if (email && !password) {
-			setErrorText("비밀번호를 입력해 주세요.");
+			setClientError("비밀번호를 입력해 주세요.");
 			return;
 		}
 
 		if (!isValidEmail(email)) {
-			setErrorText("이메일 형식이 올바르지 않습니다.");
+			setClientError("이메일 형식이 올바르지 않습니다.");
 			return;
 		}
 
 		mutate({ email, password });
 	};
 
-	const deleteValue = (name: string) => {
-		if (name === "email") {
-			emailRef.current!.value = "";
-		}
-
-		if (name === "password") {
-			passwordRef.current!.value = "";
-		}
-
-		setErrorText("");
+	// ✅ 입력값 삭제
+	const deleteValue = (name: "email" | "password") => {
+		if (name === "email" && emailRef.current) emailRef.current.value = "";
+		if (name === "password" && passwordRef.current) passwordRef.current.value = "";
+		setClientError("");
 	};
 
-	const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		const isCaps = e.getModifierState("CapsLock");
-
-		if (isCaps && !caps) {
-			errorRef.current = errorText;
-		}
-
-		setCaps(isCaps);
-		setErrorText(isCaps ? "CapsLock이 켜져 있어요." : errorRef.current || "");
+	const handlePwKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		setCaps(e.getModifierState("CapsLock"));
 	};
 
-	const handleBlur = () => {
-		if (caps) {
-			setErrorText(errorRef.current || "");
-		}
-	};
+	const handleFocus = () => setClientError("");
 
-	const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-		const isPassword = e.currentTarget.name === "password";
-		const capsErrorText = "CapsLock이 켜져 있어요.";
-		if (caps && isPassword) {
-			setErrorText(capsErrorText);
-		}
-
-		if (!caps) setErrorText("");
+	const handlePwFocus = () => {
+		setPwFocused(true);
+		setClientError("");
 	};
+	const handlePwBlur = () => setPwFocused(false);
+
+	const uiError = pwFocused && caps ? "CapsLock이 켜져 있어요." : clientError;
 
 	return (
 		<div className='main mt-20 text-center'>
 			<h2 className='mb-12 text-3xl font-[Outfit] font-bold'>LOGIN</h2>
-			<form action='' onSubmit={login} method='POST' noValidate>
+			<form onSubmit={login} noValidate>
 				<div className='flex flex-col items-center mb-6'>
 					<div className='form-login'>
 						<input
@@ -121,17 +97,24 @@ const Login = () => {
 							id='password'
 							className='peer'
 							placeholder=' '
-							onKeyDown={handleKey}
-							onKeyUp={handleKey}
+							onKeyDown={handlePwKeyDown}
 							ref={passwordRef}
-							onBlur={handleBlur}
-							onFocus={handleFocus}></input>
+							onBlur={handlePwBlur}
+							onFocus={handlePwFocus}></input>
 						<label htmlFor='password'>password</label>
 						<button type='button' onClick={() => deleteValue("password")}>
 							<IoCloseCircleSharp size={24} color='#888' />
 						</button>
 					</div>
-					{errorText && <p className='w-[334px] mt-1 pl-4 text-left text-xs text-red-600'>{errorText}</p>}
+					{uiError && (
+						<p
+							id='login-error'
+							role='alert'
+							aria-live='polite'
+							className='w-[334px] mt-1 pl-4 text-left text-xs text-red-600'>
+							{uiError}
+						</p>
+					)}
 				</div>
 				<button type='submit' className='button button-xl button-black w-84 font-bold'>
 					로그인

@@ -58,23 +58,6 @@ export const postRegister = async (value: RegisterPayload) => {
 	return body;
 };
 
-export const postEmailAvailable = async (email: RegisterInput["email"]) => {
-	const url = BASE_URL + "/users/is-available";
-	const res = await fetch(url, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ email }),
-	});
-
-	const body = await res.json();
-
-	if (!res.ok) {
-		throw body;
-	}
-
-	return body;
-};
-
 export const putUserInfo = async ({ id, newInfo }: { id: string; newInfo: Record<string, any> }) => {
 	const url = BASE_URL + `${id}`;
 	const res = await fetch(url, {
