@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useCurrentUser, useUserUpdate } from "../queries/useAuth";
+import { useCurrentUser } from "../queries/useAuth";
 
 type Role = "customer" | "admin";
 
@@ -11,7 +11,7 @@ const User = () => {
 	const isCustomer = radioValue === "customer" ? true : false;
 	const formRef = useRef<HTMLFormElement>(null);
 
-	const { mutate } = useUserUpdate();
+	// const { mutate } = useUserUpdate();
 
 	useEffect(() => {
 		if (isEditing) setRadioValue(user.role);
@@ -27,7 +27,7 @@ const User = () => {
 		setEditing((prev) => !prev);
 	};
 
-	const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSave = (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
 		e.preventDefault();
 		const formData = new FormData(formRef.current!);
 		console.log(formData.get("name"));
@@ -49,7 +49,7 @@ const User = () => {
 						delete
 					</button>
 				</div>
-				<form action='' ref={formRef} onSubmit={handleSave}>
+				<form action='' ref={formRef} onSubmit={isEditing ? handleSave : handleEdit}>
 					<div className='mt-8 font-[Outfit] border-y border-[#999] py-4'>
 						<div className='px-2 py-2'>
 							<span className='inline-block min-w-22'>user role</span>
@@ -102,10 +102,7 @@ const User = () => {
 							<span>{new Date(user.creationAt).toLocaleDateString()}</span>
 						</div>
 					</div>
-					<button
-						type='button'
-						className='button py-1 mt-4 px-10'
-						onClick={!isEditing ? handleEdit : handleSave}>
+					<button type='button' className='button py-1 mt-4 px-10'>
 						{isEditing ? "save" : "edit"}
 					</button>
 				</form>
