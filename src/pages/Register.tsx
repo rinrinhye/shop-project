@@ -1,11 +1,13 @@
 import { Link } from "react-router";
 import type { ApiError, RegisterInput } from "../types/common";
 import { ROUTES } from "../routes/routes";
-import { useLogin, useRegister } from "../queries/useAuth";
+import { useAllUserEmail, useLogin, useRegister } from "../queries/useAuth";
 import { useForm } from "react-hook-form";
 
 const Register = () => {
 	const { mutateAsync } = useRegister();
+
+	const { data: allUserEmailSet } = useAllUserEmail();
 
 	const { mutateAsync: login } = useLogin();
 
@@ -36,17 +38,17 @@ const Register = () => {
 			// mutateAsync 로 회원가입 시도 해줌!!!!
 			const data = await mutateAsync(payload);
 
-			if (data) {
+			if (allUserEmailSet!.has(data.email)) {
+				// react form hook 의 setError 사용 -> ui 표시
+				setError("email", { type: "server", message: "중복된 이메일 입니다." });
+			} else {
 				// 회원가입에서 받은 data 가 있다면 그대로 로그인 시도!!!
-				await login({ email, password });
+				login({ email, password });
 			}
 		} catch (error) {
 			const err = error as ApiError;
 
-			// react form hook 의 setError 사용 -> ui 표시
-			if (err.statusCode === 401) {
-				setError("email", { type: "server", message: "중복된 이메일 입니다." });
-			}
+			console.log(err);
 		}
 	};
 
@@ -74,7 +76,7 @@ const Register = () => {
 							{...register("email", {
 								required: "이메일을 입력해 주세요.",
 								pattern: {
-									value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+									value: /^[^\s@]+@[^\s@]+(\.[^\s@]{2,})+$/,
 									message: "올바른 이메일 형식이 아닙니다.",
 								},
 							})}></input>

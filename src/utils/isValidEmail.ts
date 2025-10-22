@@ -3,7 +3,7 @@ export function isValidEmail(value: string): boolean {
 
 	const email = value.trim();
 
-	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const emailRegex = /^[^\s@]+@[^\s@]+(\.[^\s@]{2,})+$/;
 
 	return emailRegex.test(email);
 }

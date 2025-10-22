@@ -1,3 +1,11 @@
+export interface User {
+	name: string;
+	email: string;
+	password: string;
+	role: string;
+	avatar: string;
+}
+
 export interface LoginInput {
 	email: string;
 	password: string;

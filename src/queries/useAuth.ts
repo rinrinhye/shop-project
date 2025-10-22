@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import { getCurrentUser, postLogin, postRegister, putUserInfo } from "../api/auth";
-import type { LoginInput, RegisterPayload } from "../types/common";
+import { getAllUser, getCurrentUser, postLogin, postRegister, putUserInfo } from "../api/auth";
+import type { LoginInput, RegisterPayload, User } from "../types/common";
 import { ROUTES } from "../routes/routes";
 
 export const useLogin = () => {
@@ -56,5 +56,13 @@ export const useUserUpdate = () => {
 
 			return data;
 		},
+	});
+};
+
+export const useAllUserEmail = () => {
+	return useQuery({
+		queryKey: ["allUser"],
+		queryFn: () => getAllUser(),
+		select: (data) => new Set(data.map((user: User) => user.email)),
 	});
 };

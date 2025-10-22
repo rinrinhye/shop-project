@@ -69,3 +69,10 @@ export const putUserInfo = async ({ id, newInfo }: { id: string; newInfo: Record
 
 	return body;
 };
+
+export const getAllUser = async () => {
+	const url = BASE_URL + `/users`;
+	const res = await fetch(url);
+
+	return res.json();
+};
