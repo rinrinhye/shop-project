@@ -42,7 +42,7 @@ const Register = () => {
 				// react form hook 의 setError 사용 -> ui 표시
 				setError("email", { type: "server", message: "중복된 이메일 입니다." });
 			} else {
-				// 회원가입에서 받은 data 가 있다면 그대로 로그인 시도!!!
+				// 중복된 이메일이 아니라면 로그인 시도!!!
 				login({ email, password });
 			}
 		} catch (error) {
