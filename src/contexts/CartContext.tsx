@@ -26,6 +26,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 		return saved ? JSON.parse(saved) : {};
 	});
 
+	const cartKey = !currentUser.id ? "cart:guest" : `cart:${!currentUser.id}`;
+
 	// 이전 유저 id를 기억 → 전환(게스트↔유저) 시점 정확히 감지
 	const prevUserIdRef = useRef<number | null>(currentUser?.id ?? null);
 
@@ -37,45 +39,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 	 * - 유저 카트가 이미 있으면: 그걸로 state 동기화(게스트는 정리)
 	 */
 
-	useEffect(() => {
-		const prevId = prevUserIdRef.current; // 이전 렌더의 유저 id(null=게스트)
-		const currId = currentUser?.id ?? null; // 현재 렌더의 유저 id(null=게스트)
-
-		if (prevId === currId) return; // 전환 없음 → 종료
-
-		const guestToUser = prevId === null && currId !== null;
-
-		if (guestToUser) {
-			const userKey = `cart:${currId}`;
-			const guestKey = "cart:guest";
-
-			const guestStr = localStorage.getItem(guestKey);
-			const userStr = localStorage.getItem(userKey);
-
-			const parse = (s: string | null) => (s ? JSON.parse(s) : {});
-			const guestCart = parse(guestStr);
-			const userCart = parse(userStr);
-
-			const isEmpty = (m: CartMap) => Object.keys(m).length === 0;
-
-			if (isEmpty(userCart) && !isEmpty(guestCart)) {
-				// [승계] 유저 카트가 비어있고 게스트 카트가 있으면 → 게스트 → 유저로 복사
-				localStorage.setItem(userKey, guestStr!);
-				localStorage.removeItem(guestKey);
-
-				// [동기화] 승계 즉시 UI 반영
-				setCartMap(guestCart);
-			} else {
-				// 유저 카트가 이미 있으면 그것을 사용(게스트는 정리)
-				localStorage.removeItem(guestKey);
-				if (!isEmpty(userCart)) setCartMap(userCart);
-				else setCartMap({}); // 둘 다 비었을 때 안전하게 초기화
-			}
-		}
-
-		// 전환 처리 완료 후, 이전값을 현재로 업데이트(다음 비교 대비)
-		prevUserIdRef.current = currId;
-	}, [currentUser]);
+	useEffect(() => {}, [currentUser]);
 
 	/**
 	 * [퍼시스트(쓰기 전용)]
@@ -84,21 +48,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 	 * - 유저 상태라면 게스트 키 정리
 	 * - 읽기/parse/setCartMap 금지(무한 루프 방지)
 	 */
-	useEffect(() => {
-		const isEmpty = Object.keys(cartMap).length === 0;
-		const userId = prevUserIdRef.current;
-
-		if (isEmpty) return; // ⬅️ 빈 카트면 저장 스킵
-
-		if (!userId) {
-			// 게스트로 저장
-			localStorage.setItem("cart:guest", JSON.stringify(cartMap));
-		} else {
-			// 유저로 저장 + 게스트 정리
-			localStorage.setItem(`cart:${userId}`, JSON.stringify(cartMap));
-			localStorage.removeItem("cart:guest");
-		}
-	}, [cartMap]);
 
 	const cartItems = Object.values(cartMap);
 
@@ -115,19 +64,23 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 	const addCart = useCallback((newProduct: Product) => {
 		setCartMap((prev) => {
 			if (!prev[newProduct.id]) {
-				return {
+				const next = {
 					...prev,
 					[newProduct.id]: { ...newProduct, quantity: 1 },
 				};
+				localStorage.setItem(cartKey, JSON.stringify(next));
+				return next;
 			}
 
-			return {
+			const next = {
 				...prev,
 				[newProduct.id]: {
 					...prev[newProduct.id],
 					quantity: prev[newProduct.id].quantity + 1,
 				},
 			};
+			localStorage.setItem(cartKey, JSON.stringify(next));
+			return next;
 		});
 	}, []);
 
