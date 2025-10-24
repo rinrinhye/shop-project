@@ -1,11 +1,11 @@
-import {Link, useNavigate} from "react-router";
-import {ROUTES} from "../../routes/routes";
-import {useCurrentUser, useLogout} from "../../queries/useAuth";
-import {useCategories} from "../../queries/useProducts";
-import type {Category} from "../../types/common";
-import {CiShoppingCart, CiUser, CiMenuBurger} from "react-icons/ci";
-import {useCart} from "../../contexts/CartContext";
-import {useState} from "react";
+import { Link, useNavigate } from "react-router";
+import { ROUTES } from "../../routes/routes";
+import { useCurrentUser, useLogout } from "../../queries/useAuth";
+import { useCategories } from "../../queries/useProducts";
+import type { Category } from "../../types/common";
+import { CiShoppingCart, CiUser, CiMenuBurger } from "react-icons/ci";
+import { useCart } from "../../contexts/CartContext";
+import { useEffect, useState } from "react";
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -13,9 +13,21 @@ const Header = () => {
 	const canHover = window.matchMedia("(hover: hover)").matches;
 	const [isClick, setClick] = useState(false);
 
-	const {data: categories = [], isLoading} = useCategories();
-	const {data: user, isLoading: isUserLoading} = useCurrentUser();
-	const {totalCount} = useCart();
+	const { data: categories = [], isLoading } = useCategories();
+	const { data: user, isLoading: isUserLoading, isError: isUserError, error: userError } = useCurrentUser();
+	const { totalCount } = useCart();
+
+	useEffect(() => {
+		console.log(isUserError);
+
+		if (isUserError) {
+			const err = userError as { statusCode?: number };
+			if (err.statusCode === 401) {
+				alert("토큰 만료");
+				navigate(ROUTES.home);
+			}
+		}
+	}, [isUserError, userError]);
 
 	const logout = useLogout();
 
@@ -41,7 +53,7 @@ const Header = () => {
 		}
 	};
 
-	if (isLoading && isUserLoading) return;
+	if (isLoading || isUserLoading) return null;
 
 	return (
 		<header>
