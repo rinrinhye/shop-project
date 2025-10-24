@@ -5,18 +5,18 @@ import { useState } from "react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
+import { useCart } from "../contexts/CartContext";
 const ProductDetail = () => {
 	const { id } = useParams();
 
 	const { data: product, isLoading } = useProducts({ id });
+	const { addCart } = useCart();
 	const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 	const [isOpen, setOpen] = useState<boolean>(false);
 
 	if (isLoading || !product) return null;
 
 	const { title, description, price, images } = product;
-
-	console.log(product);
 
 	return (
 		<div className='main'>
@@ -69,7 +69,10 @@ const ProductDetail = () => {
 						</button>
 					</div>
 					<div className='mt-6 flex gap-2'>
-						<button type='button' className='button button-xl grow rounded-4xl bg-black text-white'>
+						<button
+							type='button'
+							className='button button-xl grow rounded-4xl bg-black text-white'
+							onClick={() => addCart(product)}>
 							Add to Cart
 						</button>
 						<button type='button' className='button button-xl grow rounded-4xl bg-[#ef4da2] text-white'>

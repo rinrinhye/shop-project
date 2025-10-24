@@ -1,13 +1,13 @@
 @layer components {
 	input[type="checkbox"] {
-		background-image: url(../assets/icons/checkbox_off.png);
+		background-image: url(../../assets/icons/checkbox_off.png);
 		width: 24px;
 		height: 24px;
 		appearance: none;
 		cursor: pointer;
 
 		&:checked {
-			background-image: url(../assets/icons/checkbox_on.png);
+			background-image: url(../../assets/icons/checkbox_on.png);
 		}
 	}
 
