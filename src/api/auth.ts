@@ -22,8 +22,9 @@ export const postLogin = async (value: LoginInput) => {
 	return body;
 };
 
-export const getCurrentUser = async (token: string) => {
+export const getCurrentUser = async () => {
 	let url = BASE_URL + `/auth/profile`;
+	const token = localStorage.getItem("access_token");
 
 	const res = await fetch(url, {
 		headers: { Authorization: `Bearer ${token}` },
