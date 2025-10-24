@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router";
+import { Route, useNavigate } from "react-router";
 import { getAllUser, getCurrentUser, postLogin, postRegister, putUserInfo } from "../api/auth";
 import type { LoginInput, RegisterPayload, User } from "../types/common";
 import { ROUTES } from "../routes/routes";
@@ -10,22 +10,21 @@ export const useLogin = () => {
 	return useMutation({
 		mutationFn: (value: LoginInput) => postLogin(value),
 		onSuccess: (data) => {
-			if (data) {
-				localStorage.setItem("access_token", data.access_token);
-
-				navigate(ROUTES.home);
-			}
+			localStorage.setItem("access_token", data.access_token);
+			navigate(ROUTES.home);
 		},
 	});
 };
 
 export const useLogout = () => {
 	const qc = useQueryClient();
+	const navigate = useNavigate();
 
 	return () => {
 		localStorage.removeItem("access_token");
 		qc.setQueryData(["currentUser"], null);
 		qc.removeQueries({ queryKey: ["currentUser"] });
+		navigate(ROUTES.home);
 	};
 };
 
@@ -43,9 +42,10 @@ export const useCurrentUser = () => {
 	const token = localStorage.getItem("access_token");
 
 	return useQuery({
-		queryKey: ["currentUser"],
-		queryFn: () => getCurrentUser(token!),
+		queryKey: ["currentUser", token],
+		queryFn: () => getCurrentUser(),
 		enabled: !!token,
+		retry: 0,
 	});
 };
 
