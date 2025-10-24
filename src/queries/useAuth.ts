@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Route, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { getAllUser, getCurrentUser, postLogin, postRegister, putUserInfo } from "../api/auth";
 import type { LoginInput, RegisterPayload, User } from "../types/common";
 import { ROUTES } from "../routes/routes";
