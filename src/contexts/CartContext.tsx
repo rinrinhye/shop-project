@@ -1,143 +1,185 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { CartItem, Product } from "../types/common";
 import { useCurrentUser } from "../queries/useAuth";
+import { useAuth } from "./AuthContext";
 
 type CartMap = Record<number, CartItem>;
 type RemoveCart = (...ids: number[]) => void;
 
 type CartContextType = {
-	cartItems: (Product & { quantity: number })[];
-	totalPrice: string;
-	totalCount: number;
-	addCart: (p: Product) => void;
-	decreaseCart: (id: number) => void;
-	removeCart: (id: number) => void;
-	removeSelectedCart: ([...ids]: number[]) => void;
-	clearCart: () => void;
+  cartItems: (Product & { quantity: number })[];
+  totalPrice: string;
+  totalCount: number;
+  addCart: (p: Product) => void;
+  decreaseCart: (id: number) => void;
+  removeCart: (id: number) => void;
+  removeSelectedCart: ([...ids]: number[]) => void;
+  clearCart: () => void;
 };
+
+const makeCartKey = (uid?: number | null) =>
+  uid ? `cart:${uid}` : "cart:guest";
+
+function mergeGuestToUserCart(userId: string | number) {
+  const guest = JSON.parse(localStorage.getItem(makeCartKey(null)) || "{}");
+  const user = JSON.parse(
+    localStorage.getItem(makeCartKey(Number(userId))) || "{}"
+  );
+
+  const merged = { ...user };
+  for (const id in guest) {
+    const g = guest[id];
+    const u = user[id];
+    merged[id] = u ? { ...u, quantity: u.quantity + g.quantity } : g;
+  }
+
+  localStorage.setItem(makeCartKey(Number(userId)), JSON.stringify(merged));
+  localStorage.removeItem(makeCartKey(null)); // cart:guest
+  return merged;
+}
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-	const { data: currentUser } = useCurrentUser();
+  const { token: _token } = useAuth();
 
-	const [cartMap, setCartMap] = useState<CartMap>(() => {
-		const saved = currentUser ? localStorage.getItem(`cart:${currentUser.id}`) : localStorage.getItem("cart:guest");
-		return saved ? JSON.parse(saved) : {};
-	});
+  const { data: currentUser } = useCurrentUser();
 
-	const cartKey = !currentUser.id ? "cart:guest" : `cart:${!currentUser.id}`;
+  const [cartMap, setCartMap] = useState<CartMap>(() => {
+    const saved = localStorage.getItem(makeCartKey(currentUser?.id ?? null));
+    return saved ? JSON.parse(saved) : {};
+  });
 
-	// 이전 유저 id를 기억 → 전환(게스트↔유저) 시점 정확히 감지
-	const prevUserIdRef = useRef<number | null>(currentUser?.id ?? null);
+  // ✅ 최신 키를 ref로 보관 (유틸 사용)
+  const cartKeyRef = useRef<string>(makeCartKey(currentUser?.id ?? null));
+  cartKeyRef.current = makeCartKey(currentUser?.id ?? null);
 
-	/**
-	 * [전환 감지 & 승계 + 동기화]
-	 * - 게스트 → 유저 전환 시:
-	 *   1) 유저 카트가 "비어 있으면" 게스트 카트를 유저 키로 승계(복사)
-	 *   2) 승계 직후 setCartMap(...)으로 상태 동기화(화면 즉시 반영)
-	 * - 유저 카트가 이미 있으면: 그걸로 state 동기화(게스트는 정리)
-	 */
+  // 이전 유저 id를 기억 → 전환(게스트↔유저) 시점 정확히 감지
+  const prevUserIdRef = useRef<number | null>(currentUser?.id ?? null);
 
-	useEffect(() => {}, [currentUser]);
+  useEffect(() => {
+    console.log(currentUser);
+    const prevId = prevUserIdRef.current;
+    const userId = currentUser?.id ?? null;
 
-	/**
-	 * [퍼시스트(쓰기 전용)]
-	 * - cartMap 변경 시 현재 키에 저장
-	 * - "빈 카트면 저장 스킵" 적용
-	 * - 유저 상태라면 게스트 키 정리
-	 * - 읽기/parse/setCartMap 금지(무한 루프 방지)
-	 */
+    const guestToUser = !prevId && !!userId; // 게스트 → 회원 전환
+    const userToGuest = !!prevId && !userId; // 회원 → 게스트 전환
 
-	const cartItems = Object.values(cartMap);
+    if (guestToUser) {
+      const merged = mergeGuestToUserCart(String(userId));
+      setCartMap(merged);
+    }
 
-	const totalPrice = cartItems
-		.reduce((acc, curr) => {
-			return acc + curr.price * curr.quantity;
-		}, 0)
-		.toFixed(2);
+    if (userToGuest) {
+      setCartMap({});
+    }
 
-	const totalCount = cartItems.reduce((acc, curr) => {
-		return acc + curr.quantity;
-	}, 0);
+    prevUserIdRef.current = userId;
+  }, [currentUser?.id]);
 
-	const addCart = useCallback((newProduct: Product) => {
-		setCartMap((prev) => {
-			if (!prev[newProduct.id]) {
-				const next = {
-					...prev,
-					[newProduct.id]: { ...newProduct, quantity: 1 },
-				};
-				localStorage.setItem(cartKey, JSON.stringify(next));
-				return next;
-			}
+  const cartItems = Object.values(cartMap);
 
-			const next = {
-				...prev,
-				[newProduct.id]: {
-					...prev[newProduct.id],
-					quantity: prev[newProduct.id].quantity + 1,
-				},
-			};
-			localStorage.setItem(cartKey, JSON.stringify(next));
-			return next;
-		});
-	}, []);
+  const totalPrice = cartItems
+    .reduce((acc, curr) => acc + curr.price * curr.quantity, 0)
+    .toFixed(2);
 
-	const decreaseCart = useCallback((id: number) => {
-		setCartMap((prev) => {
-			const targetProduct = prev[id];
+  const totalCount = cartItems.reduce((acc, curr) => acc + curr.quantity, 0);
 
-			if (targetProduct.quantity === 1) {
-				const { [id]: _, ...rest } = prev;
-				return rest;
-			}
+  const addCart = useCallback((newProduct: Product) => {
+    setCartMap((prev) => {
+      const next = prev[newProduct.id]
+        ? {
+            ...prev,
+            [newProduct.id]: {
+              ...prev[newProduct.id],
+              quantity: prev[newProduct.id].quantity + 1,
+            },
+          }
+        : {
+            ...prev,
+            [newProduct.id]: { ...newProduct, quantity: 1 },
+          };
 
-			return {
-				...prev,
-				[id]: { ...targetProduct, quantity: targetProduct.quantity - 1 },
-			};
-		});
-	}, []);
+      localStorage.setItem(cartKeyRef.current, JSON.stringify(next));
+      return next;
+    });
+  }, []);
 
-	const removeCart: RemoveCart = useCallback((id: number) => {
-		setCartMap((prev) => {
-			const { [id]: _, ...rest } = prev;
-			return rest;
-		});
-	}, []);
+  const decreaseCart = useCallback((id: number) => {
+    setCartMap((prev) => {
+      const targetProduct = prev[id];
+      let next;
 
-	const clearCart = useCallback(() => {
-		setCartMap({});
-	}, []);
+      if (targetProduct.quantity === 1) {
+        const { [id]: _, ...rest } = prev;
+        next = rest;
+        localStorage.removeItem(cartKeyRef.current);
+        return next;
+      }
 
-	const removeSelectedCart = useCallback(([...ids]) => {
-		setCartMap((prev) => {
-			const filteredCart = Object.fromEntries(Object.entries(prev).filter(([key]) => !ids.includes(Number(key))));
+      next = {
+        ...prev,
+        [id]: { ...targetProduct, quantity: targetProduct.quantity - 1 },
+      };
 
-			return filteredCart;
-		});
-	}, []);
+      localStorage.setItem(cartKeyRef.current, JSON.stringify(next));
+      return next;
+    });
+  }, []);
 
-	return (
-		<CartContext.Provider
-			value={{
-				cartItems,
-				totalPrice,
-				totalCount,
-				addCart,
-				decreaseCart,
-				removeCart,
-				removeSelectedCart,
-				clearCart,
-			}}>
-			{children}
-		</CartContext.Provider>
-	);
+  const removeCart: RemoveCart = useCallback((id: number) => {
+    setCartMap((prev) => {
+      const { [id]: _, ...rest } = prev;
+      localStorage.setItem(cartKeyRef.current, JSON.stringify(rest));
+      return rest;
+    });
+  }, []);
+
+  const clearCart = useCallback(() => {
+    localStorage.removeItem(cartKeyRef.current);
+    setCartMap({});
+  }, []);
+
+  const removeSelectedCart = useCallback(([...ids]) => {
+    setCartMap((prev) => {
+      const filteredCart = Object.fromEntries(
+        Object.entries(prev).filter(([key]) => !ids.includes(Number(key)))
+      );
+      localStorage.setItem(cartKeyRef.current, JSON.stringify(filteredCart));
+      if (Object.keys(filteredCart).length === 0)
+        localStorage.removeItem(cartKeyRef.current);
+
+      return filteredCart;
+    });
+  }, []);
+
+  return (
+    <CartContext.Provider
+      value={{
+        cartItems,
+        totalPrice,
+        totalCount,
+        addCart,
+        decreaseCart,
+        removeCart,
+        removeSelectedCart,
+        clearCart,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };
 
 export const useCart = () => {
-	const ctx = useContext(CartContext);
-	if (!ctx) throw new Error("useCart must be used within <CartProvider>");
-	return ctx; // ← 여기서부터는 CartContextType (null 아님)
+  const ctx = useContext(CartContext);
+  if (!ctx) throw new Error("useCart must be used within <CartProvider>");
+  return ctx; // ← 여기서부터는 CartContextType (null 아님)
 };
