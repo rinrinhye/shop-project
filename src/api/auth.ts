@@ -1,4 +1,3 @@
-import { useAuth } from "../contexts/AuthContext";
 import type { LoginInput, RegisterPayload } from "../types/common";
 
 const BASE_URL = "https://api.escuelajs.co/api/v1";
