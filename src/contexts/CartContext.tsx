@@ -35,9 +35,11 @@ function mergeGuestToUserCart(userId: string | number) {
 
   const merged = { ...user };
   for (const id in guest) {
-    const g = guest[id];
-    const u = user[id];
-    merged[id] = u ? { ...u, quantity: u.quantity + g.quantity } : g;
+    const guestItem = guest[id];
+    const userItem = user[id];
+    merged[id] = userItem
+      ? { ...userItem, quantity: userItem.quantity + guestItem.quantity }
+      : guestItem;
   }
 
   localStorage.setItem(makeCartKey(Number(userId)), JSON.stringify(merged));
@@ -62,10 +64,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   cartKeyRef.current = makeCartKey(currentUser?.id ?? null);
 
   // 이전 유저 id를 기억 → 전환(게스트↔유저) 시점 정확히 감지
-  const prevUserIdRef = useRef<number | null>(currentUser?.id ?? null);
+  const prevUserIdRef = useRef<number | null>(null);
 
   useEffect(() => {
-    console.log(currentUser);
     const prevId = prevUserIdRef.current;
     const userId = currentUser?.id ?? null;
 
@@ -143,8 +144,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const clearCart = useCallback(() => {
-    localStorage.removeItem(cartKeyRef.current);
     setCartMap({});
+    localStorage.removeItem(cartKeyRef.current);
   }, []);
 
   const removeSelectedCart = useCallback(([...ids]) => {

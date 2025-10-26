@@ -28,7 +28,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setToken(null); // 리렌더 트리거
     qc.setQueryData(["currentUser"], null);
-    // currentUser 캐시를 즉시 비워 전환(useEffect) 타이밍 정확히
     qc.removeQueries({ queryKey: ["currentUser"] });
   };
 
