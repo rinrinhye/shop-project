@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useProducts } from "../queries/useProducts";
 import { useState } from "react";
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import { FreeMode, Navigation, Thumbs, EffectFade } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { useCart } from "../contexts/CartContext";
@@ -25,8 +25,10 @@ const ProductDetail = () => {
 					<div className='lg:min-w-[400px]'>
 						<Swiper
 							slidesPerView={1}
+							effect='fade'
+							speed={800}
 							thumbs={{ swiper: thumbsSwiper }}
-							modules={[FreeMode, Thumbs, Navigation]}
+							modules={[FreeMode, Thumbs, Navigation, EffectFade]}
 							className='product-swiper'>
 							{images.map((image: string, index: number) => (
 								<SwiperSlide key={index}>
