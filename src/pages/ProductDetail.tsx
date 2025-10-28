@@ -6,6 +6,23 @@ import { FreeMode, Navigation, Thumbs, EffectFade } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { useCart } from "../contexts/CartContext";
+
+const mainSwiperConfig = {
+	slidesPerView: 1,
+	effect: "fade",
+	speed: 800,
+	modules: [FreeMode, Thumbs, Navigation, EffectFade],
+};
+
+const thumbSwiperConfig = {
+	freeMode: true,
+	slidesPerView: "auto" as const,
+	spaceBetween: 8,
+	breakpoints: {
+		1024: { direction: "vertical" as const },
+	},
+};
+
 const ProductDetail = () => {
 	const { id } = useParams();
 
@@ -23,13 +40,7 @@ const ProductDetail = () => {
 			<div className='flex flex-col lg:flex-row lg:gap-8'>
 				<div className='lg:flex lg:flex-row-reverse lg:gap-2 lg:flex-[2] lg:min-w-0'>
 					<div className='lg:min-w-[400px]'>
-						<Swiper
-							slidesPerView={1}
-							effect='fade'
-							speed={800}
-							thumbs={{ swiper: thumbsSwiper }}
-							modules={[FreeMode, Thumbs, Navigation, EffectFade]}
-							className='product-swiper'>
+						<Swiper {...mainSwiperConfig} thumbs={{ swiper: thumbsSwiper }} className='product-swiper'>
 							{images.map((image: string, index: number) => (
 								<SwiperSlide key={index}>
 									<div className='rounded-lg overflow-hidden'>
@@ -40,15 +51,7 @@ const ProductDetail = () => {
 						</Swiper>
 					</div>
 					<div className='mt-2 lg:mt-0'>
-						<Swiper
-							onSwiper={setThumbsSwiper}
-							freeMode={true}
-							slidesPerView={"auto"}
-							spaceBetween={8}
-							breakpoints={{
-								1024: { direction: "vertical" },
-							}}
-							className='thumbnail-swiper'>
+						<Swiper {...thumbSwiperConfig} onSwiper={setThumbsSwiper} className='thumbnail-swiper'>
 							{images.map((image: string) => (
 								<SwiperSlide>
 									<div className='overflow-hidden rounded-xl'>
