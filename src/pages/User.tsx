@@ -1,40 +1,48 @@
-import { useEffect, useRef, useState } from "react";
-import { useCurrentUser } from "../queries/useAuth";
+import { useEffect, useState } from "react";
+import { useCurrentUser, useUserUpdate } from "../queries/useAuth";
+import { useForm } from "react-hook-form";
 
 type Role = "customer" | "admin";
+type FormValues = { name: string; role: Role };
 
 const User = () => {
 	const { data: user, isLoading } = useCurrentUser();
+
 	const [isEditing, setEditing] = useState(false);
 
-	const [radioValue, setRadioValue] = useState<Role>(user?.role);
-	const isCustomer = radioValue === "customer" ? true : false;
-	const formRef = useRef<HTMLFormElement>(null);
-
-	// const { mutate } = useUserUpdate();
+	const { register, reset, handleSubmit } = useForm<FormValues>();
 
 	useEffect(() => {
-		if (isEditing) setRadioValue(user.role);
-	}, []);
+		if (!user) return;
+		// user 초기화
+		reset({
+			name: user.name,
+			role: user.role,
+		});
+	}, [user]);
 
-	if (isLoading) return null;
-
-	const handleRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setRadioValue(e.currentTarget.value as Role);
-	};
+	const { mutate } = useUserUpdate();
 
 	const handleEdit = () => {
 		setEditing((prev) => !prev);
 	};
 
-	const handleSave = (e: React.FormEvent<HTMLFormElement | HTMLButtonElement>) => {
-		e.preventDefault();
-		const formData = new FormData(formRef.current!);
-		console.log(formData.get("name"));
-		console.log(formData.get("userRole"));
+	const handleCancel = () => {
+		setEditing((prev) => !prev);
+		reset({
+			name: user.name,
+			role: user.role,
+		});
 	};
 
-	console.log(user);
+	const onSubmit = (data: FormValues) => {
+		const payload = { id: user.id, newInfo: data };
+		mutate(payload);
+
+		setEditing((prev) => !prev);
+	};
+
+	if (isLoading) return null;
 
 	return (
 		<div className='main'>
@@ -49,7 +57,7 @@ const User = () => {
 						delete
 					</button>
 				</div>
-				<form action='' ref={formRef} onSubmit={isEditing ? handleSave : handleEdit}>
+				<form action='' onSubmit={handleSubmit(onSubmit)}>
 					<div className='mt-8 font-[Outfit] border-y border-[#999] py-4'>
 						<div className='px-2 py-2'>
 							<span className='inline-block min-w-22'>user role</span>
@@ -57,24 +65,20 @@ const User = () => {
 								<div className='form-radio'>
 									<input
 										type='radio'
-										name='userRole'
 										id='roleCustomer'
 										value='customer'
-										checked={isCustomer}
 										disabled={!isEditing}
-										onChange={handleRadio}
+										{...register("role")}
 									/>
 									<label htmlFor='roleCustomer'>customer</label>
 								</div>
 								<div className='form-radio'>
 									<input
 										type='radio'
-										name='userRole'
 										id='roleAdmin'
 										value='admin'
-										checked={!isCustomer}
 										disabled={!isEditing}
-										onChange={handleRadio}
+										{...register("role")}
 									/>
 									<label htmlFor='roleAdmin'>admin</label>
 								</div>
@@ -86,11 +90,11 @@ const User = () => {
 							</label>
 							<input
 								type='text'
-								name='name'
 								placeholder=' '
 								defaultValue={user.name}
 								readOnly={!isEditing}
 								className='border px-1'
+								{...register("name")}
 							/>
 						</div>
 						<div className='px-2 py-2'>
@@ -102,9 +106,21 @@ const User = () => {
 							<span>{new Date(user.creationAt).toLocaleDateString()}</span>
 						</div>
 					</div>
-					<button type='button' className='button py-1 mt-4 px-10'>
-						{isEditing ? "save" : "edit"}
-					</button>
+					{!isEditing && (
+						<button type='button' className='button block py-1 mt-4 mx-auto px-10' onClick={handleEdit}>
+							edit
+						</button>
+					)}
+					{isEditing && (
+						<div className='flex mt-4 justify-center gap-3'>
+							<button type='button' className='button block py-1 px-6.5' onClick={handleCancel}>
+								cancel
+							</button>
+							<button type='submit' className='button button-black block py-1 px-8'>
+								save
+							</button>
+						</div>
+					)}
 				</form>
 			</div>
 		</div>
