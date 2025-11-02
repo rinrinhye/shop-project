@@ -1,6 +1,5 @@
 import { createContext, useContext, useMemo, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useModal } from "./ModalContext";
 
 type AuthCtx = {
   token: string | null;
@@ -12,14 +11,12 @@ const AuthContext = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const qc = useQueryClient();
-  const { confirm } = useModal();
   const [token, setToken] = useState<string | null>(() =>
     localStorage.getItem("access_token")
   );
 
   // 토큰을 단일 소스로 관리(상태 → localStorage 동기화)
   useEffect(() => {
-    console.log("로컬스토리지토큰");
     if (token) localStorage.setItem("access_token", token);
     else localStorage.removeItem("access_token");
   }, [token]);
@@ -29,9 +26,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
-    const ok = await confirm("로그아웃 할까요?");
-    if (!ok) return;
-
     setToken(null); // 리렌더 트리거
     qc.setQueryData(["currentUser"], null);
     qc.removeQueries({ queryKey: ["currentUser"] });

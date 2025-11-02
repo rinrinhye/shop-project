@@ -7,10 +7,12 @@ import { CiShoppingCart, CiUser, CiMenuBurger } from "react-icons/ci";
 import { useCart } from "../../contexts/CartContext";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
+import { useModal } from "../../contexts/ModalContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { confirm } = useModal();
   const [isClick, setClick] = useState(false);
   const canHover = window.matchMedia("(hover: hover)").matches;
 
@@ -23,7 +25,6 @@ const Header = () => {
   const { totalCount } = useCart();
 
   useEffect(() => {
-    console.log(isUserError);
     console.log(userError);
 
     if (isUserError) {
@@ -55,6 +56,13 @@ const Header = () => {
     if (!canHover) {
       setClick(false);
     }
+  };
+
+  const handleLogout = () => {
+    const ok = confirm("로그아웃 할까요?");
+    if (!ok) return;
+
+    logout();
   };
 
   return (
@@ -122,7 +130,7 @@ const Header = () => {
                   <li className='hover:text-[#ef4da2]'>
                     <button
                       type='button'
-                      onClick={logout}
+                      onClick={handleLogout}
                       className='px-4 py-1 md:px-6 md:py-2.5'
                     >
                       Logout
