@@ -17,6 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // 토큰을 단일 소스로 관리(상태 → localStorage 동기화)
   useEffect(() => {
+    console.log("로컬스토리지토큰");
     if (token) localStorage.setItem("access_token", token);
     else localStorage.removeItem("access_token");
   }, [token]);

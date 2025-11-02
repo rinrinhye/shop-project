@@ -1,17 +1,18 @@
 import { Link, useNavigate } from "react-router";
 import { ROUTES } from "../../routes/routes";
-import { useCurrentUser, useLogout } from "../../queries/useAuth";
+import { useCurrentUser } from "../../queries/useAuth";
 import { useCategories } from "../../queries/useProducts";
 import type { Category } from "../../types/common";
 import { CiShoppingCart, CiUser, CiMenuBurger } from "react-icons/ci";
 import { useCart } from "../../contexts/CartContext";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Header = () => {
   const navigate = useNavigate();
-
-  const canHover = window.matchMedia("(hover: hover)").matches;
+  const { logout } = useAuth();
   const [isClick, setClick] = useState(false);
+  const canHover = window.matchMedia("(hover: hover)").matches;
 
   const { data: categories = [], isLoading } = useCategories();
   const {
@@ -28,14 +29,12 @@ const Header = () => {
 
     if (isUserError) {
       const err = userError as { statusCode?: number };
-      if (err.statusCode === 401) {
+      if (err.statusCode === 401 || 400) {
         alert("토큰 만료");
-        navigate(ROUTES.home);
+        logout();
       }
     }
   }, [isUserError, userError]);
-
-  const logout = useLogout();
 
   const handleUserButton = () => {
     if (!user) {
