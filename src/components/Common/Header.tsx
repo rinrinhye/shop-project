@@ -14,10 +14,9 @@ const Header = () => {
   const [isClick, setClick] = useState(false);
   const canHover = window.matchMedia("(hover: hover)").matches;
 
-  const { data: categories = [], isLoading } = useCategories();
+  const { data: categories = [] } = useCategories();
   const {
     data: user,
-    isLoading: isUserLoading,
     isError: isUserError,
     error: userError,
   } = useCurrentUser();
@@ -57,8 +56,6 @@ const Header = () => {
       setClick(false);
     }
   };
-
-  if (isLoading || isUserLoading) return null;
 
   return (
     <header>

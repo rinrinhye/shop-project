@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useModal } from "./ModalContext";
 
 type AuthCtx = {
   token: string | null;
@@ -11,6 +12,7 @@ const AuthContext = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const qc = useQueryClient();
+  const { confirm } = useModal();
   const [token, setToken] = useState<string | null>(() =>
     localStorage.getItem("access_token")
   );
@@ -26,7 +28,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(newToken); // 리렌더 트리거 → useCurrentUser 실행
   };
 
-  const logout = () => {
+  const logout = async () => {
+    const ok = await confirm("로그아웃 할까요?");
+    if (!ok) return;
+
     setToken(null); // 리렌더 트리거
     qc.setQueryData(["currentUser"], null);
     qc.removeQueries({ queryKey: ["currentUser"] });

@@ -9,6 +9,7 @@ import {
 import type { CartItem, Product } from "../types/common";
 import { useCurrentUser } from "../queries/useAuth";
 import { useAuth } from "./AuthContext";
+import { useModal } from "./ModalContext";
 
 type CartMap = Record<number, CartItem>;
 type RemoveCart = (...ids: number[]) => void;
@@ -51,6 +52,7 @@ const CartContext = createContext<CartContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const { token: _token } = useAuth();
+  const { confirm } = useModal();
 
   const { data: currentUser } = useCurrentUser();
 
@@ -135,7 +137,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   }, []);
 
-  const removeCart: RemoveCart = useCallback((id: number) => {
+  const removeCart: RemoveCart = useCallback(async (id: number) => {
+    const ok = await confirm("정말 삭제하시겠습니까?");
+    if (!ok) return;
+
     setCartMap((prev) => {
       const { [id]: _, ...rest } = prev;
       localStorage.setItem(cartKeyRef.current, JSON.stringify(rest));
@@ -143,7 +148,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   }, []);
 
-  const clearCart = useCallback(() => {
+  const clearCart = useCallback(async () => {
+    const ok = await confirm("모두 삭제하시겠습니까?");
+    if (!ok) return;
+
     setCartMap({});
     localStorage.removeItem(cartKeyRef.current);
   }, []);
