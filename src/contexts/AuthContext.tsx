@@ -2,11 +2,12 @@ import { createContext, useContext, useMemo, useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../routes/routes";
+import { toast } from "sonner";
 
 type AuthCtx = {
 	token: string | null;
-	login: (token: string) => void;
-	logout: () => void;
+	saveToken: (token: string) => void;
+	removeToken: () => void;
 };
 
 const AuthContext = createContext<AuthCtx | null>(null);
@@ -22,18 +23,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		else localStorage.removeItem("access_token");
 	}, [token]);
 
-	const login = (newToken: string) => {
+	const saveToken = (newToken: string) => {
 		setToken(newToken); // 리렌더 트리거 → useCurrentUser 실행
 	};
 
-	const logout = async () => {
+	const removeToken = async () => {
 		setToken(null); // 리렌더 트리거
 		qc.setQueryData(["currentUser"], null);
 		qc.removeQueries({ queryKey: ["currentUser"] });
 		navigate(ROUTES.home);
+		toast.success("로그아웃 되었습니다.");
 	};
 
-	const value = useMemo(() => ({ token, login, logout }), [token]);
+	const value = useMemo(() => ({ token, saveToken, removeToken }), [token]);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

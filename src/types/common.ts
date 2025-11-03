@@ -9,6 +9,7 @@ export interface User {
 export interface LoginInput {
 	email: string;
 	password: string;
+	_origin?: string;
 }
 
 export interface RegisterInput {

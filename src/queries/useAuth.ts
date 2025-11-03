@@ -4,28 +4,25 @@ import { getAllUser, getCurrentUser, postLogin, postRegister, putUserInfo } from
 import type { LoginInput, RegisterPayload, User } from "../types/common";
 import { ROUTES } from "../routes/routes";
 import { useAuth } from "../contexts/AuthContext";
+import { toast } from "sonner";
 
 export const useLogin = () => {
 	const navigate = useNavigate();
-	const { login } = useAuth();
+	const { saveToken } = useAuth();
 
 	return useMutation({
-		mutationFn: (value: LoginInput) => postLogin(value),
-		onSuccess: (data) => {
-			login(data.access_token);
+		mutationFn: (value: LoginInput) => {
+			const { _origin, ...payload } = value;
+			return postLogin(payload);
+		},
+		onMutate: (value) => ({ origin: value._origin ?? "login" }),
+		onSuccess: (data, _vars, ctx) => {
+			saveToken(data.access_token);
 			navigate(ROUTES.home);
+			if (ctx?.origin === "signup") toast.success("회원가입이 완료되었습니다.");
+			else toast.success("로그인 되었습니다.");
 		},
 	});
-};
-
-export const useLogout = () => {
-	const navigate = useNavigate();
-	const { logout } = useAuth();
-
-	return () => {
-		logout();
-		navigate(ROUTES.home);
-	};
 };
 
 export const useRegister = () => {
@@ -59,6 +56,7 @@ export const useUserUpdate = () => {
 		},
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: ["currentUser"] });
+			toast.success("프로필 정보가 수정되었습니다.");
 		},
 	});
 };

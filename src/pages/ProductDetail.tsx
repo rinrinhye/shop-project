@@ -34,6 +34,7 @@ const ProductDetail = () => {
 	if (isLoading || !product) return null;
 
 	const { title, description, price, images } = product;
+	console.log(product);
 
 	return (
 		<div className='main'>
@@ -43,8 +44,8 @@ const ProductDetail = () => {
 						<Swiper {...mainSwiperConfig} thumbs={{ swiper: thumbsSwiper }} className='product-swiper'>
 							{images.map((image: string, index: number) => (
 								<SwiperSlide key={index}>
-									<div className='rounded-lg overflow-hidden'>
-										<img src={image} className='' />
+									<div className='rounded-lg overflow-hidden aspect-square'>
+										<img src={image} className='w-full h-full object-cover' />
 									</div>
 								</SwiperSlide>
 							))}
@@ -52,7 +53,7 @@ const ProductDetail = () => {
 					</div>
 					<div className='mt-2 lg:mt-0'>
 						<Swiper {...thumbSwiperConfig} onSwiper={setThumbsSwiper} className='thumbnail-swiper'>
-							{images.map((image: string) => (
+							{images?.map((image: string) => (
 								<SwiperSlide>
 									<div className='overflow-hidden rounded-xl'>
 										<img src={image} alt='' className='' />

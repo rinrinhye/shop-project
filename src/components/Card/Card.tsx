@@ -11,8 +11,8 @@ const Card = ({ product }: { product: Product }) => {
 		<div className='relative'>
 			<Link to={ROUTES.productDetail(product.id)}>
 				<div>
-					<div className='rounded-lg overflow-hidden'>
-						<img src={product.images[0]} alt='' />
+					<div className='rounded-lg overflow-hidden aspect-square'>
+						<img src={product.images[0]} alt='' className='w-full h-full object-cover' />
 					</div>
 					<div className='mt-2'>
 						<span className='text-xs text-gray-400'>{product.category.name}</span>

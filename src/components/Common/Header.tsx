@@ -11,7 +11,7 @@ import { useModal } from "../../contexts/ModalContext";
 
 const Header = () => {
 	const navigate = useNavigate();
-	const { logout } = useAuth();
+	const { removeToken } = useAuth();
 	const { confirm } = useModal();
 	const [isClick, setClick] = useState(false);
 	const canHover = window.matchMedia("(hover: hover)").matches;
@@ -27,7 +27,7 @@ const Header = () => {
 			const err = userError as { statusCode?: number };
 			if (err.statusCode === 401 || 400) {
 				alert("토큰 만료");
-				logout();
+				removeToken();
 			}
 		}
 	}, [isUserError, userError]);
@@ -58,7 +58,7 @@ const Header = () => {
 		const ok = await confirm("로그아웃 할까요?");
 		if (!ok) return;
 
-		logout();
+		removeToken();
 	};
 
 	return (

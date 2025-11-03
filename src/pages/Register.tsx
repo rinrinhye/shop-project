@@ -43,7 +43,7 @@ const Register = () => {
 				setError("email", { type: "server", message: "중복된 이메일 입니다." });
 			} else {
 				// 중복된 이메일이 아니라면 로그인 시도!!!
-				login({ email, password });
+				login({ email, password, _origin: "signup" });
 			}
 		} catch (error) {
 			const err = error as ApiError;
