@@ -13,7 +13,6 @@ const AuthContext = createContext<AuthCtx | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const qc = useQueryClient();
-	const navigate = useNavigate();
 	const [token, setToken] = useState<string | null>(() => localStorage.getItem("access_token"));
 
 	// 토큰을 단일 소스로 관리(상태 → localStorage 동기화)
@@ -27,6 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	};
 
 	const logout = async () => {
+		const navigate = useNavigate();
 		setToken(null); // 리렌더 트리거
 		qc.setQueryData(["currentUser"], null);
 		qc.removeQueries({ queryKey: ["currentUser"] });
