@@ -24,6 +24,7 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
 		const root = document.createElement("div");
 		root.id = "modal-root";
 		document.body.appendChild(root);
+		root.classList.add("relative", "z-10");
 		rootRef.current = root;
 	};
 

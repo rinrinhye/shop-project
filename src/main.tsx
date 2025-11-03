@@ -13,15 +13,15 @@ import { ModalProvider } from "./contexts/ModalContext";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-  <QueryClientProvider client={queryClient}>
-    <ModalProvider>
-      <AuthProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </CartProvider>
-      </AuthProvider>
-    </ModalProvider>
-  </QueryClientProvider>
+	<QueryClientProvider client={queryClient}>
+		<BrowserRouter>
+			<ModalProvider>
+				<AuthProvider>
+					<CartProvider>
+						<App />
+					</CartProvider>
+				</AuthProvider>
+			</ModalProvider>
+		</BrowserRouter>
+	</QueryClientProvider>
 );
