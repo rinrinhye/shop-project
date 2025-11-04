@@ -109,12 +109,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 			const targetProduct = prev[id];
 			let next;
 
-			if (targetProduct.quantity === 1) {
-				const { [id]: _, ...rest } = prev;
-				next = rest;
-				localStorage.removeItem(cartKeyRef.current);
-				return next;
-			}
+			if (targetProduct.quantity === 1) return prev;
 
 			next = {
 				...prev,
