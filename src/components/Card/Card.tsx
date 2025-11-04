@@ -12,7 +12,15 @@ const Card = ({ product }: { product: Product }) => {
 			<Link to={ROUTES.productDetail(product.id)}>
 				<div>
 					<div className='rounded-lg overflow-hidden aspect-square'>
-						<img src={product.images[0]} alt='' className='w-full h-full object-cover' />
+						<img
+							src={product.images[0]}
+							alt=''
+							className='w-full h-full object-cover'
+							onError={(e) => {
+								e.currentTarget.onerror = null; // 무한 루프 방지
+								e.currentTarget.src = "/img/no_image.png";
+							}}
+						/>
 					</div>
 					<div className='mt-2'>
 						<span className='text-xs text-gray-400'>{product.category.name}</span>

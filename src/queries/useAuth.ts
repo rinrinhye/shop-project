@@ -12,10 +12,10 @@ export const useLogin = () => {
 
 	return useMutation({
 		mutationFn: (value: LoginInput) => {
-			const { _origin, ...payload } = value;
+			const { origin, ...payload } = value;
 			return postLogin(payload);
 		},
-		onMutate: (value) => ({ origin: value._origin ?? "login" }),
+		onMutate: (value) => ({ origin: value.origin ?? "login" }),
 		onSuccess: (data, _vars, ctx) => {
 			saveToken(data.access_token);
 			navigate(ROUTES.home);
@@ -29,7 +29,6 @@ export const useRegister = () => {
 	return useMutation({
 		mutationFn: async (value: RegisterPayload) => {
 			const data = await postRegister(value);
-
 			return data;
 		},
 	});

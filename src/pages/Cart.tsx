@@ -95,7 +95,8 @@ const Cart = () => {
 							<button
 								type='button'
 								className='button button-md my-6'
-								onClick={() => removeSelectedCart([...selectedIds])}>
+								onClick={() => removeSelectedCart([...selectedIds])}
+								disabled={selectedIds.size === 0}>
 								선택 상품 삭제
 							</button>
 						</div>

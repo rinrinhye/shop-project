@@ -15,7 +15,7 @@ type CartContextType = {
 	addCart: (p: Product) => void;
 	decreaseCart: (id: number) => void;
 	removeCart: (id: number) => void;
-	removeSelectedCart: ([...ids]: number[]) => void;
+	removeSelectedCart: (ids: number[]) => void;
 	clearCart: () => void;
 };
 
@@ -144,7 +144,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 		toast.success("상품이 장바구니에서 삭제되었습니다.");
 	}, []);
 
-	const removeSelectedCart = useCallback(async ([...ids]) => {
+	const removeSelectedCart = useCallback(async (ids: number[]) => {
 		const ok = await confirm("선택한 상품을 삭제하시겠습니까?");
 		if (!ok) return;
 
