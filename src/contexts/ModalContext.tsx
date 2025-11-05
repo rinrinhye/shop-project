@@ -1,5 +1,6 @@
 import { createContext, useContext, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import Button from "../components/ui/Button";
 
 type ModalContextType = {
 	confirm: (text: string) => Promise<boolean>;
@@ -69,9 +70,9 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
 					<div className='bg-black/40 fixed inset-0 flex items-center justify-center' onClick={handleCancel}>
 						<div className='bg-white rounded-2xl p-6' onClick={(e) => e.stopPropagation()}>
 							<p className='mb-4'>{text}</p>
-							<div className='flex justify-end gap-2'>
-								<button onClick={handleCancel}>취소</button>
-								<button onClick={handleConfirm}>확인</button>
+							<div className='flex gap-2'>
+								<Button text='취소' size='md' onClick={handleCancel} className='grow' />
+								<Button text='확인' size='md' onClick={handleConfirm} className='grow' color='black' />
 							</div>
 						</div>
 					</div>,

@@ -4,6 +4,7 @@ import { ROUTES } from "../routes/routes";
 import { useLogin } from "../queries/useAuth";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { isValidEmail } from "../utils/isValidEmail";
+import Button from "../components/ui/Button";
 
 const Login = () => {
 	const emailRef = useRef<HTMLInputElement>(null);
@@ -116,9 +117,7 @@ const Login = () => {
 						</p>
 					)}
 				</div>
-				<button type='submit' className='button button-xl button-black w-84 font-bold'>
-					로그인
-				</button>
+				<Button type='submit' size='xl' color='black' className='w-84' text='로그인' />
 			</form>
 			<Link
 				to={ROUTES.register}

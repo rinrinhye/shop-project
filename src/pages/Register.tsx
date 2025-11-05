@@ -3,6 +3,7 @@ import type { ApiError, RegisterInput } from "../types/common";
 import { ROUTES } from "../routes/routes";
 import { useAllUserEmail, useLogin, useRegister } from "../queries/useAuth";
 import { useForm } from "react-hook-form";
+import Button from "../components/ui/Button";
 
 const Register = () => {
 	const { mutateAsync } = useRegister();
@@ -109,9 +110,7 @@ const Register = () => {
 						{errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
 					</div>
 				</div>
-				<button type='submit' className='button button-xl button-black w-84 font-bold disabled:opacity-40'>
-					회원가입
-				</button>
+				<Button type='submit' size='xl' color='black' text='회원가입' className='w-84' />
 			</form>
 			<Link to={ROUTES.login} className='block mt-8 text-[#666] underline underline-offset-4 decoration-current'>
 				로그인

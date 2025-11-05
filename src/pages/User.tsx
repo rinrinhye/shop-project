@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useCurrentUser, useUserUpdate } from "../queries/useAuth";
 import { useForm } from "react-hook-form";
 
@@ -6,11 +6,15 @@ type Role = "customer" | "admin";
 type FormValues = { name: string; role: Role };
 
 const User = () => {
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
+
 	const { data: user, isLoading } = useCurrentUser();
 
 	const [isEditing, setEditing] = useState(false);
 
 	const { register, reset, handleSubmit } = useForm<FormValues>();
+
+	const { mutate } = useUserUpdate();
 
 	useEffect(() => {
 		if (!user) return;
@@ -20,8 +24,6 @@ const User = () => {
 			role: user.role,
 		});
 	}, [user]);
-
-	const { mutate } = useUserUpdate();
 
 	const handleEdit = () => {
 		setEditing((prev) => !prev);
@@ -42,13 +44,29 @@ const User = () => {
 		setEditing((prev) => !prev);
 	};
 
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		console.log(e.target.files);
+	};
+
 	if (isLoading) return null;
 
 	return (
 		<div className='main'>
 			<div className='flex flex-col items-center'>
 				<div className='w-20 h-20 overflow-hidden rounded-full'>
-					<button type='button'>
+					<button
+						type='button'
+						className='w-full h-full'
+						onClick={() => {
+							fileInputRef?.current?.click();
+						}}>
+						<input
+							type='file'
+							accept='image/*'
+							onChange={handleFileChange}
+							ref={fileInputRef}
+							className='hidden'
+						/>
 						<img src={user.avatar} alt='' />
 					</button>
 				</div>

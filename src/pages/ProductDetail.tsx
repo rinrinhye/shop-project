@@ -6,6 +6,7 @@ import { FreeMode, Navigation, Thumbs, EffectFade } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { useCart } from "../contexts/CartContext";
+import Button from "../components/ui/Button";
 
 const mainSwiperConfig = {
 	slidesPerView: 1,
@@ -100,15 +101,22 @@ const ProductDetail = () => {
 						</button>
 					</div>
 					<div className='mt-6 flex gap-2'>
-						<button
-							type='button'
-							className='button button-xl grow rounded-4xl bg-black text-white'
-							onClick={() => addCart(product)}>
-							Add to Cart
-						</button>
-						<button type='button' className='button button-xl grow rounded-4xl bg-[#ef4da2] text-white'>
-							Buy Now
-						</button>
+						<Button
+							size='xl'
+							rounded
+							color='black'
+							onClick={() => addCart(product)}
+							text='Add to Cart'
+							className='grow'
+						/>
+						<Button
+							size='xl'
+							rounded
+							color='pink'
+							onClick={() => addCart(product)}
+							text='Buy Now'
+							className='grow'
+						/>
 					</div>
 				</div>
 			</div>
