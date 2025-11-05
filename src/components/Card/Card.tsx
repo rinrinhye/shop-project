@@ -36,7 +36,7 @@ const Card = ({ product }: { product: Product }) => {
 			<button
 				type='button'
 				onClick={() => addCart(product)}
-				className='font-[Outfit] mt-2 text-sm underline tracking-tight'>
+				className='font-outfit mt-2 text-sm underline tracking-tight'>
 				Add to Cart+
 			</button>
 		</div>

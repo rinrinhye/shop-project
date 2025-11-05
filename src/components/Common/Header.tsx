@@ -67,7 +67,7 @@ const Header = () => {
 				<button type='button' className='mobile-only'>
 					<CiMenuBurger size={24} />
 				</button>
-				<h1 className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-[Outfit] font-bold'>
+				<h1 className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-outfit font-bold'>
 					<Link to='/'>SHOP</Link>
 				</h1>
 				<nav className='mobile-hidden'>
@@ -97,7 +97,7 @@ const Header = () => {
 					<div
 						onMouseEnter={enterUserDropdown}
 						onMouseLeave={leaveUserDropdown}
-						className={`relative h-full group font-[Outfit] inline-flex ${user ? "" : "lg:hidden"}`}>
+						className={`relative h-full group font-outfit inline-flex ${user ? "" : "lg:hidden"}`}>
 						<button type='button' onClick={handleUserButton}>
 							<CiUser size={28} />
 						</button>
@@ -130,7 +130,7 @@ const Header = () => {
 					<button type='button' onClick={handleCartButton} className='relative'>
 						<CiShoppingCart size={32} />
 						{totalCount !== 0 && (
-							<span className='font-[Outfit] absolute top-0 right-[-3px] px-1.5 rounded-full bg-[#ef4da2] text-[10px] text-white'>
+							<span className='font-outfit absolute top-0 right-[-3px] px-1.5 rounded-full bg-[#ef4da2] text-[10px] text-white'>
 								{totalCount}
 							</span>
 						)}

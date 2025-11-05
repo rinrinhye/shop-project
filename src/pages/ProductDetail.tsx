@@ -121,7 +121,7 @@ const ProductDetail = () => {
 				</div>
 			</div>
 			<div className='mt-10'>
-				<ul className='flex justify-between font-[Outfit]'>
+				<ul className='flex justify-between font-outfit'>
 					<li>
 						<button type='button' className='px-4 py-2'>
 							Product Info

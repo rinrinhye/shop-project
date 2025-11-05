@@ -76,7 +76,7 @@ const User = () => {
 					</button>
 				</div>
 				<form action='' onSubmit={handleSubmit(onSubmit)}>
-					<div className='mt-8 font-[Outfit] border-y border-[#999] py-4'>
+					<div className='mt-8 font-outfit border-y border-[#999] py-4'>
 						<div className='px-2 py-2'>
 							<span className='inline-block min-w-22'>user role</span>
 							<div className='inline-flex gap-2'>

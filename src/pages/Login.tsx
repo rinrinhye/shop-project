@@ -74,7 +74,7 @@ const Login = () => {
 
 	return (
 		<div className='main mt-20 text-center'>
-			<h2 className='mb-12 text-3xl font-[Outfit] font-bold'>LOGIN</h2>
+			<h2 className='mb-12 text-3xl font-outfit font-bold'>LOGIN</h2>
 			<form onSubmit={login} noValidate>
 				<div className='flex flex-col items-center mb-6'>
 					<div className='form-login'>

@@ -3,7 +3,7 @@ import Button from "../../ui/Button";
 const OrderSummary = ({ totalPrice, deliveryFee }) => {
 	return (
 		<div className='lg:w-200 lg:sticky lg:top-5'>
-			<div className='font-[Outfit] py-6 px-6 bg-[#f5f5f5] rounded-3xl'>
+			<div className='font-outfit py-6 px-6 bg-[#f5f5f5] rounded-3xl'>
 				<p className='flex justify-between text-sm mb-4'>
 					<span>총 상품 금액</span>
 					<span>${totalPrice}</span>

@@ -55,7 +55,7 @@ const Register = () => {
 
 	return (
 		<div className='main mt-20 text-center'>
-			<h2 className='mb-12 text-3xl font-[Outfit] font-bold'>JOIN</h2>
+			<h2 className='mb-12 text-3xl font-outfit font-bold'>JOIN</h2>
 			<form onSubmit={handleSubmit(onSubmit)} noValidate>
 				<div className='flex flex-col items-center gap-5 mb-12'>
 					<div className='form-join'>

@@ -29,7 +29,7 @@ const CartItem = ({ product, isSelected, toggleOne }) => {
 							disabled={product.quantity === 1}>
 							<FiMinus size={10} />
 						</button>
-						<span className='font-[Outfit] text-sm'>{product.quantity}</span>
+						<span className='font-outfit text-sm'>{product.quantity}</span>
 						<button type='button' onClick={() => addCart(product)} className='px-2 py-2'>
 							<FiPlus size={10} />
 						</button>

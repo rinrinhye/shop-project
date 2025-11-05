@@ -25,7 +25,7 @@ const Cart = () => {
 
 	return (
 		<div className='main pb-30'>
-			<h2 className=' my-10 font-[Outfit] font-bold text-center text-4xl'>Cart</h2>
+			<h2 className=' my-10 font-outfit font-bold text-center text-4xl'>Cart</h2>
 			{cartItems.length !== 0 && (
 				<>
 					<div className='mb-6 flex justify-between items-center'>
@@ -61,7 +61,7 @@ const Cart = () => {
 					</div>
 				</>
 			)}
-			{cartItems.length === 0 && <p className='text-center font-[Outfit]'>장바구니가 비었습니다.</p>}
+			{cartItems.length === 0 && <p className='text-center font-outfit'>장바구니가 비었습니다.</p>}
 			{cartItems.length !== 0 && (
 				<div className='fixed bottom-0 left-0 flex gap-4 px-4 py-4 w-full bg-white shadow-[0_-4px_5px_-4px_rgb(0_0_0/.18)] lg:hidden'>
 					<Button text='선택 상품 주문' size='lg' className='grow' />
