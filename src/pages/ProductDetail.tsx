@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useProducts } from "../queries/useProducts";
 import { useRef, useState } from "react";
@@ -25,14 +25,21 @@ const thumbSwiperConfig = {
 
 const ProductDetail = () => {
 	const { id } = useParams();
+	const navigate = useNavigate();
 
-	const { data: product, isLoading } = useProducts({ id });
+	const { data: product, isLoading, isError } = useProducts({ id });
 	const { addCart } = useCart();
 	const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 	const [isOpen, setOpen] = useState<boolean>(false);
 	const imgErrorRef = useRef<boolean>(false);
 
-	if (isLoading || !product) return null;
+	if (isLoading) return null;
+	if (isError) {
+		alert("페이지를 찾을 수 없습니다. 상품을 삭제해 주세요.");
+		navigate(-1);
+		return null;
+	}
+	if (!product) return null;
 
 	const { title, description, price, images } = product;
 	console.log(product);

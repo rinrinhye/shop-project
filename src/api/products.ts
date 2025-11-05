@@ -1,6 +1,6 @@
 const BASE_URL = "https://api.escuelajs.co/api/v1";
 
-export const getProducts = async ({id, categorySlug}: {id?: string; categorySlug?: string}) => {
+export const getProducts = async ({ id, categorySlug }: { id?: string; categorySlug?: string }) => {
 	let url = BASE_URL + "/products";
 
 	if (id) {
@@ -12,16 +12,24 @@ export const getProducts = async ({id, categorySlug}: {id?: string; categorySlug
 	}
 
 	const res = await fetch(url);
-	const data = await res.json();
+	const body = await res.json();
 
-	return data;
+	if (!res.ok) {
+		throw body;
+	}
+
+	return body;
 };
 
 export const getCategories = async () => {
 	let url = BASE_URL + "/categories?limit=4";
 
 	const res = await fetch(url);
-	const data = await res.json();
+	const body = await res.json();
 
-	return data;
+	if (!res.ok) {
+		throw body;
+	}
+
+	return body;
 };
