@@ -28,11 +28,13 @@ const ProductDetail = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 
-	const { data: product, isLoading, isError } = useProducts({ id });
-	const { addCart } = useCart();
 	const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 	const [isOpen, setOpen] = useState<boolean>(false);
+
 	const imgErrorRef = useRef<boolean>(false);
+
+	const { data: product, isLoading, isError } = useProducts({ id });
+	const { addCart } = useCart();
 
 	if (isLoading) return null;
 	if (isError) {
@@ -43,7 +45,6 @@ const ProductDetail = () => {
 	if (!product) return null;
 
 	const { title, description, price, images } = product;
-	console.log(product);
 
 	return (
 		<div className='main'>
@@ -70,8 +71,8 @@ const ProductDetail = () => {
 					</div>
 					<div className='mt-2 lg:mt-0'>
 						<Swiper {...thumbSwiperConfig} onSwiper={setThumbsSwiper} className='thumbnail-swiper'>
-							{images?.map((image: string) => (
-								<SwiperSlide>
+							{images?.map((image: string, index: number) => (
+								<SwiperSlide key={index}>
 									<div className='overflow-hidden rounded-xl aspect-square'>
 										<img
 											src={image}

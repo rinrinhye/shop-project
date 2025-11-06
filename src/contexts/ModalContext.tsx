@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Button from "../components/ui/Button";
 
@@ -11,58 +11,86 @@ const ModalContext = createContext<ModalContextType | null>(null);
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
 	const [isOpen, setOpen] = useState(false);
 	const [text, setText] = useState("");
-	const [resolver, setResolver] = useState<((value: boolean) => void) | null>(null);
+
+	const resolverRef = useRef<((value: boolean) => void) | null>(null);
 	const rootRef = useRef<HTMLElement | null>(null);
 
-	const createRoot = () => {
-		if (rootRef.current && document.body.contains(rootRef.current)) return;
+	// 컴포넌트 언마운트 시 cleanup
+	useEffect(() => {
+		return () => {
+			resolverRef.current?.(false);
+			rootRef.current?.remove();
+		};
+	}, []);
 
-		const existing = document.getElementById("modal-root") as HTMLDivElement | null;
+	const createRoot = useCallback(() => {
+		if (rootRef.current?.isConnected) return;
+
+		const existing = document.getElementById("modal-root");
 		if (existing) {
 			rootRef.current = existing;
 			return;
 		}
+
 		const root = document.createElement("div");
 		root.id = "modal-root";
+		root.className = "relative z-10";
 		document.body.appendChild(root);
-		root.classList.add("relative", "z-10");
 		rootRef.current = root;
-	};
+	}, []);
 
-	const removeRoot = () => {
-		const el = rootRef.current;
-		if (el && document.body.contains(el)) {
-			el.remove();
-		}
+	const removeRoot = useCallback(() => {
+		rootRef.current?.remove();
 		rootRef.current = null;
-	};
+	}, []);
 
-	const cleanup = () => {
+	const handleConfirm = useCallback(() => {
+		resolverRef.current?.(true);
+		resolverRef.current = null;
 		setOpen(false);
 		setText("");
-		setResolver(null);
 		removeRoot();
-	};
+	}, [removeRoot]);
 
-	const confirm = (text: string) => {
-		createRoot();
-		setOpen(true);
-		setText(text);
-		return new Promise<boolean>((resolve) => setResolver(() => resolve));
-	};
+	const handleCancel = useCallback(() => {
+		resolverRef.current?.(false);
+		resolverRef.current = null;
+		setOpen(false);
+		setText("");
+		removeRoot();
+	}, [removeRoot]);
 
-	const handleConfirm = () => {
-		resolver?.(true);
-		cleanup();
-	};
+	// ESC 키 핸들러
+	useEffect(() => {
+		if (!isOpen) return;
 
-	const handleCancel = () => {
-		resolver?.(false);
-		cleanup();
-	};
+		const handleEscape = (e: KeyboardEvent) => {
+			if (e.key === "Escape") handleCancel();
+		};
+
+		document.addEventListener("keydown", handleEscape);
+		return () => document.removeEventListener("keydown", handleEscape);
+	}, [isOpen, handleCancel]);
+
+	const confirm = useCallback(
+		(text: string) => {
+			resolverRef.current?.(false);
+
+			createRoot();
+			setOpen(true);
+			setText(text);
+
+			return new Promise<boolean>((resolve) => {
+				resolverRef.current = resolve;
+			});
+		},
+		[createRoot]
+	);
+
+	const contextValue = useMemo(() => ({ confirm }), [confirm]);
 
 	return (
-		<ModalContext.Provider value={{ confirm }}>
+		<ModalContext.Provider value={contextValue}>
 			{children}
 			{isOpen &&
 				rootRef.current &&

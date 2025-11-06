@@ -9,7 +9,7 @@ type ButtonProps = {
 	disabled?: boolean;
 	size?: ButtonSize;
 	color?: ButtonColor;
-	rounded?: boolean; // 👈 추가
+	rounded?: boolean;
 	className?: string;
 	onClick?: () => void;
 };

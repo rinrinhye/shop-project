@@ -6,12 +6,6 @@ import { useForm } from "react-hook-form";
 import Button from "../components/ui/Button";
 
 const Register = () => {
-	const { mutateAsync } = useRegister();
-
-	const { data: allUserEmailSet } = useAllUserEmail();
-
-	const { mutateAsync: login } = useLogin();
-
 	const {
 		register,
 		handleSubmit,
@@ -31,19 +25,20 @@ const Register = () => {
 		},
 	});
 
+	const { mutateAsync } = useRegister();
+	const { data: allUserEmailSet } = useAllUserEmail();
+	const { mutateAsync: login } = useLogin();
+
 	const onSubmit = async (data: RegisterInput) => {
 		const { name, email, password, avatar } = data;
 		const payload = { name, email, password, avatar };
 
 		try {
-			// mutateAsync 로 회원가입 시도 해줌!!!!
 			const data = await mutateAsync(payload);
 
 			if (allUserEmailSet!.has(data.email)) {
-				// react form hook 의 setError 사용 -> ui 표시
 				setError("email", { type: "server", message: "중복된 이메일 입니다." });
 			} else {
-				// 중복된 이메일이 아니라면 로그인 시도!!!
 				login({ email, password, origin: "signup" });
 			}
 		} catch (error) {

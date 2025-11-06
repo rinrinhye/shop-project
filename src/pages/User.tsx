@@ -6,19 +6,17 @@ type Role = "customer" | "admin";
 type FormValues = { name: string; role: Role };
 
 const User = () => {
-	const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-	const { data: user, isLoading } = useCurrentUser();
-
 	const [isEditing, setEditing] = useState(false);
 
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const { register, reset, handleSubmit } = useForm<FormValues>();
 
+	const { data: user, isLoading } = useCurrentUser();
 	const { mutate } = useUserUpdate();
 
 	useEffect(() => {
 		if (!user) return;
-		// user 초기화
+
 		reset({
 			name: user.name,
 			role: user.role,

@@ -7,12 +7,12 @@ import { isValidEmail } from "../utils/isValidEmail";
 import Button from "../components/ui/Button";
 
 const Login = () => {
-	const emailRef = useRef<HTMLInputElement>(null);
-	const passwordRef = useRef<HTMLInputElement>(null);
-
 	const [clientError, setClientError] = useState("");
 	const [caps, setCaps] = useState(false);
 	const [pwFocused, setPwFocused] = useState(false);
+
+	const emailRef = useRef<HTMLInputElement>(null);
+	const passwordRef = useRef<HTMLInputElement>(null);
 
 	const { mutate, error, isError } = useLogin();
 

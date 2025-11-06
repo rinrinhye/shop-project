@@ -5,12 +5,11 @@ import OrderSummary from "../components/cart/OrderSummary/OrderSummary";
 import Button from "../components/ui/Button";
 
 const Cart = () => {
-	const { cartItems, totalPrice, removeSelectedCart, clearCart } = useCart();
-
 	const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
-	const deliveryFee = Number(totalPrice) < 200 ? 10.5 : 0;
+	const { cartItems, totalPrice, removeSelectedCart, clearCart } = useCart();
 
+	const deliveryFee = Number(totalPrice) < 200 ? 10.5 : 0;
 	const isAllChecked = selectedIds.size === cartItems.length ? true : false;
 
 	const toggleAll = () =>
