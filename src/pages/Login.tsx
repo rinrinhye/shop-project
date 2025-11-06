@@ -14,7 +14,7 @@ const Login = () => {
 	const emailRef = useRef<HTMLInputElement>(null);
 	const passwordRef = useRef<HTMLInputElement>(null);
 
-	const { mutate, error, isError } = useLogin();
+	const { mutate: login, error, isError } = useLogin();
 
 	useEffect(() => {
 		if (!isError || !error) return;
@@ -24,7 +24,7 @@ const Login = () => {
 		}
 	}, [isError, error]);
 
-	const login = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 		const email = (formData.get("email") as string)?.trim();
@@ -48,7 +48,7 @@ const Login = () => {
 			return;
 		}
 
-		mutate({ email, password });
+		login({ email, password });
 	};
 
 	// ✅ 입력값 삭제
@@ -75,7 +75,7 @@ const Login = () => {
 	return (
 		<div className='main mt-20 text-center'>
 			<h2 className='mb-12 text-3xl font-outfit font-bold'>LOGIN</h2>
-			<form onSubmit={login} noValidate>
+			<form onSubmit={handleSubmit} noValidate>
 				<div className='flex flex-col items-center mb-6'>
 					<div className='form-login'>
 						<input

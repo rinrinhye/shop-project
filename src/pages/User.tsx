@@ -12,7 +12,7 @@ const User = () => {
 	const { register, reset, handleSubmit } = useForm<FormValues>();
 
 	const { data: user, isLoading } = useCurrentUser();
-	const { mutate } = useUserUpdate();
+	const { mutate: updateUserInfo } = useUserUpdate();
 
 	useEffect(() => {
 		if (!user) return;
@@ -37,7 +37,7 @@ const User = () => {
 
 	const onSubmit = (data: FormValues) => {
 		const payload = { id: user.id, newInfo: data };
-		mutate(payload);
+		updateUserInfo(payload);
 
 		setEditing((prev) => !prev);
 	};
@@ -101,11 +101,12 @@ const User = () => {
 							</div>
 						</div>
 						<div className='px-2 py-2'>
-							<label htmlFor='' className='inline-block min-w-22'>
+							<label htmlFor='name' className='inline-block min-w-22'>
 								name
 							</label>
 							<input
 								type='text'
+								id='name'
 								placeholder=' '
 								defaultValue={user.name}
 								readOnly={!isEditing}

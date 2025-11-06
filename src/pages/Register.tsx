@@ -25,7 +25,7 @@ const Register = () => {
 		},
 	});
 
-	const { mutateAsync } = useRegister();
+	const { mutateAsync: registerUser } = useRegister();
 	const { data: allUserEmailSet } = useAllUserEmail();
 	const { mutateAsync: login } = useLogin();
 
@@ -34,7 +34,7 @@ const Register = () => {
 		const payload = { name, email, password, avatar };
 
 		try {
-			const data = await mutateAsync(payload);
+			const data = await registerUser(payload);
 
 			if (allUserEmailSet!.has(data.email)) {
 				setError("email", { type: "server", message: "중복된 이메일 입니다." });
