@@ -9,19 +9,22 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ModalProvider } from "./contexts/ModalContext";
+import { FavoriteProvider } from "./contexts/FavoriteContext";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-	<QueryClientProvider client={queryClient}>
-		<BrowserRouter>
-			<ModalProvider>
-				<AuthProvider>
-					<CartProvider>
-						<App />
-					</CartProvider>
-				</AuthProvider>
-			</ModalProvider>
-		</BrowserRouter>
-	</QueryClientProvider>
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <ModalProvider>
+        <AuthProvider>
+          <CartProvider>
+            <FavoriteProvider>
+              <App />
+            </FavoriteProvider>
+          </CartProvider>
+        </AuthProvider>
+      </ModalProvider>
+    </BrowserRouter>
+  </QueryClientProvider>
 );
