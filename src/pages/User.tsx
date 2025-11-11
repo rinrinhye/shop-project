@@ -3,15 +3,11 @@ import { useCurrentUser, useUserUpdate } from "../queries/useAuth";
 import { useForm } from "react-hook-form";
 import { useFavorites } from "../contexts/FavoriteContext";
 import Card from "../components/Card/Card";
-import { useNavigate } from "react-router";
-import { ROUTES } from "../routes/routes";
-import { useCart } from "../contexts/CartContext";
 
 type Role = "customer" | "admin";
 type FormValues = { name: string; role: Role };
 
 const User = () => {
-	const navigate = useNavigate();
 	const [isEditing, setEditing] = useState(false);
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -19,7 +15,6 @@ const User = () => {
 
 	const { data: user, isLoading } = useCurrentUser();
 	const { mutate: updateUserInfo } = useUserUpdate();
-	const { cartItems } = useCart();
 	const { favoriteItems } = useFavorites();
 
 	useEffect(() => {
