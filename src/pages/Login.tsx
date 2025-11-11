@@ -121,7 +121,7 @@ const Login = () => {
 			</form>
 			<Link
 				to={ROUTES.register}
-				className='block mt-8 text-[#666] underline underline-offset-4 decoration-current'>
+				className='block mt-8 text-gray-700 underline underline-offset-4 decoration-current'>
 				회원가입
 			</Link>
 		</div>

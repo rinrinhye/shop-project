@@ -7,7 +7,7 @@ const CartItem = ({ product, isSelected, toggleOne }) => {
 	const { addCart, decreaseCart, removeCart } = useCart();
 
 	return (
-		<li key={product.id} className='first:pb-8 not-first:py-8 border-b border-[#e2e2e2]'>
+		<li key={product.id} className='first:pb-8 not-first:py-8 border-b border-gray-200'>
 			<div className='relative grid grid-cols-2 gap-y-4 gap-x-6 lg:grid-cols-[auto_1fr_1fr]'>
 				<div className='col-span-full lg:col-auto'>
 					<input type='checkbox' onChange={() => toggleOne(product.id)} checked={isSelected} />
@@ -21,7 +21,7 @@ const CartItem = ({ product, isSelected, toggleOne }) => {
 				<div className='lg:pr-6'>
 					<p className='text-xl'>{product.title}</p>
 					<p className='mt-2 text-gray-600'>USD {product.price.toFixed(2)}</p>
-					<div className='mt-2 flex items-center justify-between border-1 border-[#e2e2e2] rounded-4xl px-2 py-1 w-24'>
+					<div className='mt-2 flex items-center justify-between border-1 border-gray-200 rounded-4xl px-2 py-1 w-24'>
 						<button
 							type='button'
 							onClick={() => decreaseCart(product.id)}
@@ -38,7 +38,7 @@ const CartItem = ({ product, isSelected, toggleOne }) => {
 				<button
 					type='button'
 					onClick={() => removeCart(product.id)}
-					className='absolute top-0 right-0 rounded-full bg-[#eee] p-1'>
+					className='absolute top-0 right-0 rounded-full bg-gray-100 p-1'>
 					<IoMdClose size={16} />
 					<span className='sr-only'></span>
 				</button>

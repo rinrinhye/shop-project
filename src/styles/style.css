@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@import "./swiper.css";
+
+@import "./theme.css";
 
 @import "./global.css";
 
@@ -7,3 +8,5 @@
 
 @import "./components/button.css";
 @import "./components/input.css";
+
+@import "./swiper.css";

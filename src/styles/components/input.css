@@ -12,14 +12,14 @@
 	}
 
 	.form-login {
-		@apply relative border rounded-t-lg border-[#e2e2e2] h-16 w-84;
+		@apply relative border rounded-t-lg border-gray-200 h-16 w-84;
 
 		input {
 			@apply h-full w-full pl-3.5 pr-12 pt-4.5;
 		}
 
 		label {
-			@apply absolute top-1/2 left-4 -translate-y-1/2 text-[#8e8e8e] transition-all;
+			@apply absolute top-1/2 left-4 -translate-y-1/2 text-gray-400 transition-all;
 			@apply peer-focus:scale-75 peer-focus:-translate-x-2 peer-focus:-translate-y-6;
 			@apply peer-[&:not(:placeholder-shown)]:scale-75
             peer-[&:not(:placeholder-shown)]:-translate-x-2
@@ -41,19 +41,23 @@
 	}
 
 	.form-join {
-		@apply w-84 text-left text-[#777];
+		@apply w-84 text-left text-gray-500;
 
 		label {
 			@apply block;
 		}
 
 		input {
-			@apply h-10 pt-2 border-b-1 border-[#666] w-full outline-none;
+			@apply h-10 pt-2 border-b-1 border-gray-500 w-full outline-none;
 			@apply focus-visible:border-b-2;
 		}
 
 		p {
 			@apply mt-1 text-[13px] text-red-500;
 		}
+	}
+
+	.form-checkbox {
+		@apply flex items-center gap-2;
 	}
 }

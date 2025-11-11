@@ -103,18 +103,18 @@ const Header = () => {
 						</button>
 						{user && (
 							<div
-								className={` transition absolute z-10 top-[calc(100%)] left-1/2 -translate-x-1/2 py-2 border border-[#d8d8d8] bg-white rounded-md whitespace-nowrap text-base ${
+								className={`transition absolute z-10 top-[calc(100%)] left-1/2 -translate-x-1/2 py-2 border border-gray-50 bg-white rounded-md whitespace-nowrap text-base ${
 									isClick
 										? "opacity-100 translate-y-0 md:-translate-y-2 pointer-events-auto"
 										: "opacity-0 translate-y-[10px] pointer-events-none"
 								} group-hover:opacity-100 group-hover:translate-y-0 md:group-hover:-translate-y-2 group-hover:pointer-events-auto`}>
 								<ul>
-									<li className='hover:text-[#ef4da2]'>
+									<li className='hover:text-primary'>
 										<Link to={ROUTES.user(user.id)} className='block px-4 py-1 md:px-6 md:py-2.5'>
 											My Page
 										</Link>
 									</li>
-									<li className='hover:text-[#ef4da2]'>
+									<li className='hover:text-primary'>
 										<button
 											type='button'
 											onClick={handleLogout}
@@ -130,7 +130,7 @@ const Header = () => {
 					<button type='button' onClick={handleCartButton} className='relative'>
 						<CiShoppingCart size={32} />
 						{totalCount !== 0 && (
-							<span className='font-outfit absolute top-0 right-[-3px] px-1.5 rounded-full bg-[#ef4da2] text-[10px] text-white'>
+							<span className='font-outfit absolute top-0 right-[-3px] px-1.5 rounded-full bg-primary text-[10px] text-white'>
 								{totalCount}
 							</span>
 						)}

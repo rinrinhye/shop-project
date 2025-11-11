@@ -1,15 +1,10 @@
 @layer base {
-	:root {
-		--font-inter: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-		--font-outfit: "Outfit", "Inter", system-ui, sans-serif;
-	}
-
 	body {
-		font-family: var(--font-inter);
+		@apply font-inter;
 	}
 
 	button {
-		cursor: pointer;
+		@apply cursor-pointer;
 	}
 }
 
@@ -28,9 +23,5 @@
 
 	.mobile-hidden {
 		@apply hidden md:block;
-	}
-
-	.form-checkbox {
-		@apply flex items-center gap-2;
 	}
 }

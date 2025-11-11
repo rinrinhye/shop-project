@@ -107,7 +107,9 @@ const Register = () => {
 				</div>
 				<Button type='submit' size='xl' color='black' text='회원가입' className='w-84' />
 			</form>
-			<Link to={ROUTES.login} className='block mt-8 text-[#666] underline underline-offset-4 decoration-current'>
+			<Link
+				to={ROUTES.login}
+				className='block mt-8 text-gray-600 underline underline-offset-4 decoration-current'>
 				로그인
 			</Link>
 		</div>
