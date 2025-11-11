@@ -41,6 +41,7 @@ const Cart = () => {
 							<ul className='mt-4'>
 								{cartItems.map((product) => (
 									<CartItem
+										key={product.id}
 										product={product}
 										isSelected={selectedIds.has(product.id)}
 										toggleOne={toggleOne}

@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { useCart } from "../../../contexts/CartContext";
 import { IoMdClose } from "react-icons/io";
 import { FiMinus, FiPlus } from "react-icons/fi";
+import ProductImage from "../../ProductImage/ProductImage";
 
 const CartItem = ({ product, isSelected, toggleOne }) => {
 	const { addCart, decreaseCart, removeCart } = useCart();
@@ -14,13 +15,13 @@ const CartItem = ({ product, isSelected, toggleOne }) => {
 					<label htmlFor='' className='sr-only'></label>
 				</div>
 				<Link to={`/products/${product.id}`}>
-					<div className='rounded-2xl overflow-hidden lg:max-w-140'>
-						<img src={product.images[0]} alt='' />
-					</div>
+					<ProductImage src={product.images[0]} variant='wide' />
 				</Link>
 				<div className='lg:pr-6'>
 					<p className='text-xl'>{product.title}</p>
-					<p className='mt-2 text-gray-600'>USD {product.price.toFixed(2)}</p>
+					<p className='mt-2 text-gray-600'>
+						USD {product.price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+					</p>
 					<div className='mt-2 flex items-center justify-between border-1 border-gray-200 rounded-4xl px-2 py-1 w-24'>
 						<button
 							type='button'

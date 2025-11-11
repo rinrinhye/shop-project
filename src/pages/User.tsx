@@ -151,7 +151,10 @@ const User = () => {
 			<div className='p-2 md:p-0'>
 				<div>
 					<div className='flex justify-between'>
-						<p className='text-lg font-semibold mb-4'>Favorites</p>
+						<p className='text-lg font-semibold mb-4'>
+							Favorites
+							<span className='ml-1 text-outfit text-gray-500 font-medium'>{favoriteItems.length}</span>
+						</p>
 						{favoriteItems.length > 4 && (
 							<button type='button' className='text-sm'>
 								더보기
@@ -163,26 +166,7 @@ const User = () => {
 							{favoriteItems.map((item, index) => {
 								if (index > 4) return;
 
-								return <Card product={item} />;
-							})}
-						</div>
-					)}
-				</div>
-				<div className='mt-8'>
-					<div className='flex justify-between'>
-						<p className='text-lg font-semibold mb-4'>Cart</p>
-						{cartItems.length > 4 && (
-							<button type='button' className='text-sm' onClick={() => navigate(ROUTES.cart)}>
-								더보기
-							</button>
-						)}
-					</div>
-					{cartItems && (
-						<div className='grid grid-cols-5 gap-2'>
-							{cartItems.map((item, index) => {
-								if (index > 4) return;
-
-								return <Card product={item} />;
+								return <Card key={item.id} product={item} variant='summary' />;
 							})}
 						</div>
 					)}

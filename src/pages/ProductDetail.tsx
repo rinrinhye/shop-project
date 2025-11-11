@@ -7,6 +7,7 @@ import type { Swiper as SwiperType } from "swiper";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { useCart } from "../contexts/CartContext";
 import Button from "../components/ui/Button";
+import ProductImage from "../components/ProductImage/ProductImage";
 
 const mainSwiperConfig = {
 	slidesPerView: 1,
@@ -54,17 +55,7 @@ const ProductDetail = () => {
 						<Swiper {...mainSwiperConfig} thumbs={{ swiper: thumbsSwiper }} className='product-swiper'>
 							{images.map((image: string, index: number) => (
 								<SwiperSlide key={index}>
-									<div className='rounded-lg overflow-hidden aspect-square'>
-										<img
-											src={image}
-											className='w-full h-full object-cover'
-											onError={(e) => {
-												e.currentTarget.onerror = null; // 무한 루프 방지
-												e.currentTarget.src = "/img/no_image.png";
-												imgErrorRef.current = true;
-											}}
-										/>
-									</div>
+									<ProductImage src={image} />
 								</SwiperSlide>
 							))}
 						</Swiper>
@@ -93,7 +84,7 @@ const ProductDetail = () => {
 				<div className='lg:flex-[1.5] lg:max-w-[600px]'>
 					<div className='mt-4'>
 						<p className='text-2xl'>{title}</p>
-						<p className='mt-2 text-lg'>${price}</p>
+						<p className='mt-2 text-lg'>${price.toLocaleString("en-US", { minimumFractionDigits: 2 })}</p>
 						<p className={`mt-2 leading-relaxed text-gray-700 ${isOpen ? "" : "line-clamp-3"}`}>
 							{description}
 						</p>

@@ -6,7 +6,7 @@ const OrderSummary = ({ totalPrice, deliveryFee }) => {
 			<div className='font-outfit py-6 px-6 bg-gray-100 rounded-3xl'>
 				<p className='flex justify-between text-sm mb-4'>
 					<span>총 상품 금액</span>
-					<span>${totalPrice}</span>
+					<span>${Number(totalPrice).toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
 				</p>
 				<p className='flex justify-between text-sm mb-6'>
 					<span>배송비</span>
@@ -15,7 +15,7 @@ const OrderSummary = ({ totalPrice, deliveryFee }) => {
 				<p className='flex justify-between pt-6 border-t'>
 					<span>결제 예정 금액</span>
 					<span className='font-bold text-lg text-primary'>
-						${(Number(totalPrice) + deliveryFee).toFixed(2)}
+						${(Number(totalPrice) + deliveryFee).toLocaleString("en-US", { minimumFractionDigits: 2 })}
 					</span>
 				</p>
 			</div>

@@ -4,30 +4,25 @@ import { useCart } from "../../contexts/CartContext";
 import { ROUTES } from "../../routes/routes";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { useFavorites } from "../../contexts/FavoriteContext";
+import ProductImage from "../ProductImage/ProductImage";
 
-const Card = ({ product }: { product: Product }) => {
+const Card = ({ product, variant }: { product: Product; variant?: string }) => {
 	const { addCart } = useCart();
 	const { toggleFavorites, isFavorite } = useFavorites();
+
+	const variantClass = variant === "summary" ? "line-clamp-1" : "line-clamp-2";
 
 	return (
 		<div className='relative'>
 			<Link to={ROUTES.productDetail(product.id)}>
 				<div>
-					<div className='rounded-lg overflow-hidden aspect-square'>
-						<img
-							src={product.images[0]}
-							alt=''
-							className='w-full h-full object-cover'
-							onError={(e) => {
-								e.currentTarget.onerror = null; // 무한 루프 방지
-								e.currentTarget.src = "/img/no_image.png";
-							}}
-						/>
-					</div>
+					<ProductImage src={product.images[0]} variant='square' />
 					<div className='mt-2'>
 						<span className='text-xs text-gray-400'>{product.category.name}</span>
-						<p className='line-clamp-2'>{product.title}</p>
-						<p className='mt-1 text-sm text-gray-700'>USD {product.price.toFixed(2)}</p>
+						<p className={variantClass}>{product.title}</p>
+						<p className='mt-1 text-sm text-gray-700'>
+							USD {product.price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+						</p>
 					</div>
 				</div>
 			</Link>
@@ -38,12 +33,14 @@ const Card = ({ product }: { product: Product }) => {
 					<IoHeartOutline size={24} color='#e2e2e2' />
 				)}
 			</button>
-			<button
-				type='button'
-				onClick={() => addCart(product)}
-				className='font-outfit mt-2 text-sm underline tracking-tight'>
-				Add to Cart+
-			</button>
+			{variant !== "summary" && (
+				<button
+					type='button'
+					onClick={() => addCart(product)}
+					className='font-outfit mt-2 text-sm underline tracking-tight'>
+					Add to Cart+
+				</button>
+			)}
 		</div>
 	);
 };
