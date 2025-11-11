@@ -81,12 +81,13 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
 	}, [isOpen, handleCancel]);
 
 	const confirm = useCallback(
-		(c: React.ReactNode, o: ConfirmOptions = {}) => {
+		(content: React.ReactNode, options: ConfirmOptions = {}) => {
 			resolverRef.current?.(false); // 기존 대기자 안전 종료
 			createRoot();
-			setContent(c);
-			setOpts(o);
+			setContent(content);
+			setOpts(options);
 			setOpen(true);
+
 			return new Promise<boolean>((resolve) => {
 				resolverRef.current = resolve;
 			});
