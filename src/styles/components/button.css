@@ -1,7 +1,6 @@
 @layer components {
 	.button {
-		font-family: var(--font-outfit);
-		@apply border border-gray-200 rounded-md text-gray-950;
+		@apply font-outfit border border-gray-200 rounded-md text-gray-950;
 	}
 
 	.button-sm {
