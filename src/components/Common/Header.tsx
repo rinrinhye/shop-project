@@ -103,7 +103,7 @@ const Header = () => {
 						</button>
 						{user && (
 							<div
-								className={`transition absolute z-10 top-[calc(100%)] left-1/2 -translate-x-1/2 py-2 border border-gray-50 bg-white rounded-md whitespace-nowrap text-base ${
+								className={`transition absolute z-10 top-[calc(100%)] left-1/2 -translate-x-1/2 py-2 border border-gray-200 bg-white rounded-md whitespace-nowrap text-base ${
 									isClick
 										? "opacity-100 translate-y-0 md:-translate-y-2 pointer-events-auto"
 										: "opacity-0 translate-y-[10px] pointer-events-none"
