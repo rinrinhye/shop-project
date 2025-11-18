@@ -1,4 +1,4 @@
-import type { LoginPayload, RegisterPayload, User } from "../types/common";
+import type { LoginPayload, RegisterPayload } from "../types/common";
 
 const BASE_URL = "https://api.escuelajs.co/api/v1";
 
