@@ -32,11 +32,12 @@ const Button = ({
 		xl: "button-xl",
 	}[size];
 
-	const colorClass =
-		{
-			black: "button-black",
-			pink: "button-pink",
-		}[color ?? ""] ?? "";
+	const colorClass = color
+		? {
+				black: "button-black",
+				pink: "button-pink",
+		  }[color]
+		: "";
 
 	const roundedMap: Record<ButtonSize, string> = {
 		xs: "rounded-md",

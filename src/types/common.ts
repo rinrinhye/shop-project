@@ -1,12 +1,17 @@
 type Role = "customer" | "admin";
 
 export type User = {
+	id: number;
 	name: string;
 	email: string;
 	password: string;
 	role: Role;
 	avatar: string;
 };
+
+export type UserForm = { name: string; role: Role };
+
+export type UserPayload = Partial<User>;
 
 export type LoginForm = {
 	email: string;
@@ -18,7 +23,6 @@ export type LoginPayload = {
 	email: string;
 	password: string;
 };
-
 export type RegisterForm = {
 	name: string;
 	email: string;
@@ -29,8 +33,6 @@ export type RegisterForm = {
 };
 
 export type RegisterPayload = Omit<RegisterForm, "confirmPassword" | "role">;
-
-export type UserForm = { name: string; role: Role };
 
 export type Category = {
 	id: number;

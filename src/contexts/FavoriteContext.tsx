@@ -19,9 +19,9 @@ export const FavoriteProvider = ({ children }: { children: React.ReactNode }) =>
 	const { token: _token } = useAuth();
 	const { data: currentUser } = useCurrentUser();
 
-	const [favorites, setFavorites] = useState<FavoriteMap | null>(() => {
-		const items = JSON.parse(localStorage.getItem(`like:${currentUser?.id}`));
-		return items ?? null;
+	const [favorites, setFavorites] = useState<FavoriteMap>(() => {
+		const stored = localStorage.getItem(`like:${currentUser?.id}`);
+		return stored ? JSON.parse(stored) : {};
 	});
 
 	const favoriteItems = useMemo(() => favorites && Object.values(favorites), [favorites]);

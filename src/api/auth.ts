@@ -1,4 +1,4 @@
-import type { LoginPayload, RegisterPayload } from "../types/common";
+import type { LoginPayload, RegisterPayload, UserPayload } from "../types/common";
 
 const BASE_URL = "https://api.escuelajs.co/api/v1";
 
@@ -58,13 +58,14 @@ export const postRegister = async (value: RegisterPayload) => {
 	return body;
 };
 
-export const putUserInfo = async ({ id, newInfo }: { id: string; newInfo: Record<string, any> }) => {
+export const putUserInfo = async (payload: UserPayload) => {
+	const { id, ...rest } = payload;
 	const url = BASE_URL + `/users/${id}`;
 
 	const res = await fetch(url, {
 		method: "PUT",
 		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(newInfo),
+		body: JSON.stringify(rest),
 	});
 	const body = await res.json();
 

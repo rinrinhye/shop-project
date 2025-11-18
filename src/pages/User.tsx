@@ -37,7 +37,7 @@ const User = () => {
 	};
 
 	const onSubmit = (data: UserForm) => {
-		const payload = { id: user.id, newInfo: data };
+		const payload = { id: user.id, ...data };
 		updateUserInfo(payload);
 
 		setEditing((prev) => !prev);

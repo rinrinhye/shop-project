@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { getAllUser, getCurrentUser, postLogin, postRegister, putUserInfo } from "../api/auth";
-import type { LoginForm, RegisterPayload, User } from "../types/common";
+import type { LoginForm, RegisterPayload, User, UserPayload } from "../types/common";
 import { ROUTES } from "../routes/routes";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "sonner";
@@ -48,8 +48,8 @@ export const useCurrentUser = () => {
 export const useUserUpdate = () => {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: async ({ id, newInfo }: { id: string; newInfo: Record<string, any> }) => {
-			const data = await putUserInfo({ id, newInfo });
+		mutationFn: async (payload: UserPayload) => {
+			const data = await putUserInfo(payload);
 
 			return data;
 		},
