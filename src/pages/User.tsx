@@ -3,15 +3,13 @@ import { useCurrentUser, useUserUpdate } from "../queries/useAuth";
 import { useForm } from "react-hook-form";
 import { useFavorites } from "../contexts/FavoriteContext";
 import Card from "../components/Card/Card";
-
-type Role = "customer" | "admin";
-type FormValues = { name: string; role: Role };
+import type { UserForm } from "../types/common";
 
 const User = () => {
 	const [isEditing, setEditing] = useState(false);
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-	const { register, reset, handleSubmit } = useForm<FormValues>();
+	const { register, reset, handleSubmit } = useForm<UserForm>();
 
 	const { data: user, isLoading } = useCurrentUser();
 	const { mutate: updateUserInfo } = useUserUpdate();
@@ -38,7 +36,7 @@ const User = () => {
 		});
 	};
 
-	const onSubmit = (data: FormValues) => {
+	const onSubmit = (data: UserForm) => {
 		const payload = { id: user.id, newInfo: data };
 		updateUserInfo(payload);
 

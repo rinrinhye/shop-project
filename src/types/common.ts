@@ -1,38 +1,47 @@
-export interface User {
+type Role = "customer" | "admin";
+
+export type User = {
 	name: string;
 	email: string;
 	password: string;
-	role: string;
+	role: Role;
 	avatar: string;
-}
+};
 
-export interface LoginInput {
+export type LoginForm = {
 	email: string;
 	password: string;
-	origin?: string;
-}
+	origin?: "login" | "signup";
+};
 
-export interface RegisterInput {
+export type LoginPayload = {
+	email: string;
+	password: string;
+};
+
+export type RegisterForm = {
 	name: string;
 	email: string;
 	password: string;
 	confirmPassword: string;
-	role: string;
+	role: Role;
 	avatar: string;
-}
+};
 
-export type RegisterPayload = Omit<RegisterInput, "confirmPassword" | "role">;
+export type RegisterPayload = Omit<RegisterForm, "confirmPassword" | "role">;
 
-export interface Category {
+export type UserForm = { name: string; role: Role };
+
+export type Category = {
 	id: number;
 	name: string;
 	slug: string;
 	image: string;
 	creationAt: string;
 	updatedAt: string;
-}
+};
 
-export interface Product {
+export type Product = {
 	id: number;
 	title: string;
 	slug: string;
@@ -42,7 +51,7 @@ export interface Product {
 	images: Array<string>;
 	creationAt: string;
 	updatedAt: string;
-}
+};
 
 export type CartItem = Product & { quantity: number };
 
@@ -50,7 +59,7 @@ export type CartMap = Record<number, CartItem>;
 
 export type FavoriteMap = Record<number, Product>;
 
-export type ApiError = {
+export type ErrorResponse = {
 	statusCode: number;
 	message: string;
 };

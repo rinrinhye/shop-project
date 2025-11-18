@@ -1,8 +1,8 @@
-import type { LoginInput, RegisterPayload } from "../types/common";
+import type { LoginPayload, RegisterPayload, User } from "../types/common";
 
 const BASE_URL = "https://api.escuelajs.co/api/v1";
 
-export const postLogin = async (value: LoginInput) => {
+export const postLogin = async (value: LoginPayload) => {
 	const url = BASE_URL + "/auth/login";
 
 	const res = await fetch(url, {

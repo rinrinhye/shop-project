@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import type { ApiError, RegisterInput } from "../types/common";
+import type { ErrorResponse, RegisterForm } from "../types/common";
 import { ROUTES } from "../routes/routes";
 import { useAllUserEmail, useLogin, useRegister } from "../queries/useAuth";
 import { useForm } from "react-hook-form";
@@ -29,7 +29,7 @@ const Register = () => {
 	const { data: allUserEmailSet } = useAllUserEmail();
 	const { mutateAsync: login } = useLogin();
 
-	const onSubmit = async (data: RegisterInput) => {
+	const onSubmit = async (data: RegisterForm) => {
 		const { name, email, password, avatar } = data;
 		const payload = { name, email, password, avatar };
 
@@ -42,7 +42,7 @@ const Register = () => {
 				login({ email, password, origin: "signup" });
 			}
 		} catch (error) {
-			const err = error as ApiError;
+			const err = error as ErrorResponse;
 
 			console.log(err);
 		}

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { getAllUser, getCurrentUser, postLogin, postRegister, putUserInfo } from "../api/auth";
-import type { LoginInput, RegisterPayload, User } from "../types/common";
+import type { LoginForm, RegisterPayload, User } from "../types/common";
 import { ROUTES } from "../routes/routes";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "sonner";
@@ -11,7 +11,7 @@ export const useLogin = () => {
 	const { saveToken } = useAuth();
 
 	return useMutation({
-		mutationFn: (value: LoginInput) => {
+		mutationFn: (value: LoginForm) => {
 			const { origin, ...payload } = value;
 			return postLogin(payload);
 		},
