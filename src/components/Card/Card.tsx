@@ -26,7 +26,9 @@ const Card = ({ product, variant }: { product: Product; variant?: string }) => {
 					</div>
 				</div>
 			</Link>
-			<button className='absolute top-3 right-3 lg:top-4 lg:right-4' onClick={() => toggleFavorites(product)}>
+			<button
+				className='absolute flex items-center justify-center top-0 right-0 w-12 h-12 lg:w-16 lg:h-16'
+				onClick={() => toggleFavorites(product)}>
 				{isFavorite(product.id) ? (
 					<IoHeartSharp size={24} color='#ef4da2' />
 				) : (

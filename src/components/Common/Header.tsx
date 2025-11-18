@@ -63,7 +63,7 @@ const Header = () => {
 
 	return (
 		<header>
-			<div className='relative h-14 px-4 flex justify-between items-center md:h-20 md:px-8'>
+			<div className='relative h-14 px-4 flex justify-between items-center md:h-20 md:px-8 lg:px-12 xl:px-20'>
 				<button type='button' className='mobile-only'>
 					<CiMenuBurger size={24} />
 				</button>
