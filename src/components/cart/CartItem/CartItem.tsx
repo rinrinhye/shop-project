@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useCart } from "../../../contexts/CartContext";
+import { useCartActions } from "../../../contexts/CartContext";
 import { IoMdClose } from "react-icons/io";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import ProductImage from "../../ProductImage/ProductImage";
@@ -12,8 +12,8 @@ type Props = {
 	toggleOne: (id: number) => void;
 };
 
-const CartItem = ({ product, isSelected, toggleOne }: Props) => {
-	const { addCart, decreaseCart, removeCart } = useCart();
+const CartItemComponent = ({ product, isSelected, toggleOne }: Props) => {
+	const { addCart, decreaseCart, removeCart } = useCartActions();
 
 	return (
 		<li key={product.id} className='first:pb-8 not-first:py-8 border-b border-gray-200'>
@@ -59,4 +59,4 @@ const CartItem = ({ product, isSelected, toggleOne }: Props) => {
 	);
 };
 
-export default React.memo(CartItem);
+export default React.memo(CartItemComponent);

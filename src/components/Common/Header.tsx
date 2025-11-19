@@ -4,7 +4,7 @@ import { useCurrentUser } from "../../queries/useAuth";
 import { useCategories } from "../../queries/useProducts";
 import type { Category } from "../../types/common";
 import { CiShoppingCart, CiUser, CiMenuBurger } from "react-icons/ci";
-import { useCart } from "../../contexts/CartContext";
+import { useCartState } from "../../contexts/CartContext";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useModal } from "../../contexts/ModalContext";
@@ -20,7 +20,7 @@ const Header = () => {
 
 	const { data: categories = [] } = useCategories();
 	const { data: user, isError: isUserError, error: userError } = useCurrentUser();
-	const { totalCount } = useCart();
+	const { totalCount } = useCartState();
 
 	useEffect(() => {
 		console.log(userError);

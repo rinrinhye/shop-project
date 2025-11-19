@@ -4,7 +4,7 @@ import { useCategories } from "../../queries/useProducts";
 import { useCurrentUser } from "../../queries/useAuth";
 import { useAuth } from "../../contexts/AuthContext";
 import { useModal } from "../../contexts/ModalContext";
-import { useCart } from "../../contexts/CartContext";
+import { useCartState } from "../../contexts/CartContext";
 import { ROUTES } from "../../routes/routes";
 import { useScrollLock } from "../../hooks/useScrollLock";
 import type { Category } from "../../types/common";
@@ -19,7 +19,7 @@ const Sidebar = ({ open, onClose }: Props) => {
 	const { data: user } = useCurrentUser();
 	const { removeToken } = useAuth();
 	const { confirm } = useModal();
-	const { totalCount } = useCart();
+	const { totalCount } = useCartState();
 
 	useScrollLock(open);
 

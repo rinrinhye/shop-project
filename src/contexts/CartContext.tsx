@@ -7,16 +7,21 @@ import { toast } from "sonner";
 
 type RemoveCart = (...ids: number[]) => void;
 
-type CartContextType = {
+type CartStateContextType = {
 	cartItems: CartItem[];
 	totalPrice: string;
 	totalCount: number;
+};
+
+type CartActionsContextType = {
 	addCart: (p: Product) => void;
 	decreaseCart: (id: number) => void;
 	removeCart: (id: number) => void;
 	removeSelectedCart: (ids: number[]) => void;
 	clearCart: () => void;
 };
+
+type CartContextType = CartStateContextType & CartActionsContextType;
 
 const makeCartKey = (uid?: number | null) => (uid ? `cart:${uid}` : "cart:guest");
 
@@ -25,7 +30,9 @@ function mergeGuestToUserCart(userId: string | number) {
 	const user = JSON.parse(localStorage.getItem(makeCartKey(Number(userId))) || "{}");
 
 	const merged = { ...user };
-	for (const id in guest) {
+	for (const idStr in guest) {
+		const id = Number(idStr);
+
 		const guestItem = guest[id];
 		const userItem = user[id];
 		merged[id] = userItem ? { ...userItem, quantity: userItem.quantity + guestItem.quantity } : guestItem;
@@ -42,12 +49,12 @@ function mergeGuestToUserCart(userId: string | number) {
 	return merged;
 }
 
-const CartContext = createContext<CartContextType | null>(null);
+const CartStateContext = createContext<CartStateContextType | null>(null);
+const CartActionsContext = createContext<CartActionsContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 	const { token: _token } = useAuth();
 	const { confirm } = useModal();
-
 	const { data: currentUser } = useCurrentUser();
 
 	const cartKey = makeCartKey(currentUser?.id ?? null);
@@ -96,7 +103,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 		return { cartItems, totalPrice, totalCount };
 	}, [cartMap]);
 
-	// 8) 액션들 — 최신 키는 cartKeyRef.current 사용
+	// ---- actions ----
 	const addCart = useCallback((newProduct: Product) => {
 		setCartMap((prev) => {
 			const exists = prev[newProduct.id];
@@ -185,24 +192,43 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 		[confirm]
 	);
 
-	const contextValue = useMemo(
+	const stateValue = useMemo<CartStateContextType>(
 		() => ({
 			cartItems,
 			totalPrice,
 			totalCount,
+		}),
+		[cartItems, totalPrice, totalCount]
+	);
+
+	const actionsValue = useMemo<CartActionsContextType>(
+		() => ({
 			addCart,
 			decreaseCart,
 			removeCart,
 			removeSelectedCart,
 			clearCart,
 		}),
-		[cartItems, totalPrice, totalCount, addCart, decreaseCart, removeCart, removeSelectedCart, clearCart]
+		[addCart, decreaseCart, removeCart, removeSelectedCart, clearCart]
 	);
-	return <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>;
+
+	return (
+		<CartStateContext.Provider value={stateValue}>
+			<CartActionsContext.Provider value={actionsValue}>{children}</CartActionsContext.Provider>
+		</CartStateContext.Provider>
+	);
 };
 
-export const useCart = () => {
-	const ctx = useContext(CartContext);
-	if (!ctx) throw new Error("useCart must be used within <CartProvider>");
-	return ctx; // ← 여기서부터는 CartContextType (null 아님)
+// ---- hooks ----
+
+export const useCartState = () => {
+	const ctx = useContext(CartStateContext);
+	if (!ctx) throw new Error("useCartState must be used within <CartProvider>");
+	return ctx;
+};
+
+export const useCartActions = () => {
+	const ctx = useContext(CartActionsContext);
+	if (!ctx) throw new Error("useCartActions must be used within <CartProvider>");
+	return ctx;
 };

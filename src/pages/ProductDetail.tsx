@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { FreeMode, Navigation, Thumbs, EffectFade } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
-import { useCart } from "../contexts/CartContext";
+import { useCartActions } from "../contexts/CartContext";
 import Button from "../components/ui/Button";
 import ProductImage from "../components/ProductImage/ProductImage";
 
@@ -35,7 +35,7 @@ const ProductDetail = () => {
 	const imgErrorRef = useRef<boolean>(false);
 
 	const { data: product, isLoading, isError } = useProducts({ id });
-	const { addCart } = useCart();
+	const { addCart } = useCartActions();
 
 	if (isLoading) return null;
 	if (isError) {
