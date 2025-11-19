@@ -21,8 +21,6 @@ type CartActionsContextType = {
 	clearCart: () => void;
 };
 
-type CartContextType = CartStateContextType & CartActionsContextType;
-
 const makeCartKey = (uid?: number | null) => (uid ? `cart:${uid}` : "cart:guest");
 
 function mergeGuestToUserCart(userId: string | number) {
