@@ -23,6 +23,7 @@ export type LoginPayload = {
 	email: string;
 	password: string;
 };
+
 export type RegisterForm = {
 	name: string;
 	email: string;
