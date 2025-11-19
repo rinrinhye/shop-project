@@ -12,7 +12,7 @@ type Props = {
 	toggleOne: (id: number) => void;
 };
 
-const CartItemComponent = ({ product, isSelected, toggleOne }: Props) => {
+const CartItem = ({ product, isSelected, toggleOne }: Props) => {
 	const { addCart, decreaseCart, removeCart } = useCartActions();
 
 	return (
@@ -59,4 +59,4 @@ const CartItemComponent = ({ product, isSelected, toggleOne }: Props) => {
 	);
 };
 
-export default React.memo(CartItemComponent);
+export default React.memo(CartItem);
