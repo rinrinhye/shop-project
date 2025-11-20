@@ -93,8 +93,8 @@ const User = () => {
           >
             <div className='border-y border-gray-200 py-4 space-y-3'>
               <div>
-                <p className='mb-1 text-[13px] text-gray-500 uppercase tracking-wide'>
-                  user role
+                <p className='mb-1 text-[13px] text-gray-500 tracking-wide'>
+                  USER ROLE
                 </p>
                 <div className='inline-flex gap-4'>
                   <label className='form-radio inline-flex items-center gap-1 text-sm'>
@@ -123,9 +123,9 @@ const User = () => {
               <div className='space-y-1'>
                 <label
                   htmlFor='name'
-                  className='block text-[13px] text-gray-500 uppercase tracking-wide'
+                  className='block text-[13px] text-gray-500 tracking-wide'
                 >
-                  name
+                  NAME
                 </label>
                 <input
                   type='text'
@@ -143,15 +143,15 @@ const User = () => {
               </div>
 
               <div className='space-y-1'>
-                <p className='text-[13px] text-gray-500 uppercase tracking-wide'>
-                  email
+                <p className='text-[13px] text-gray-500 tracking-wide'>
+                  EMAIL
                 </p>
                 <p className='text-sm text-gray-800 break-all'>{user.email}</p>
               </div>
 
               <div className='space-y-1'>
-                <p className='text-[13px] text-gray-500 uppercase tracking-wide'>
-                  join date
+                <p className='text-[13px] text-gray-500 tracking-wide'>
+                  JOIN DATE
                 </p>
                 <p className='text-sm text-gray-800'>
                   {new Date(user.creationAt).toLocaleDateString()}
