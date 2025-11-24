@@ -87,7 +87,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
 		if (userToGuest) {
 			setCartMap({});
-			localStorage.removeItem(makeCartKey(prevId));
 			localStorage.removeItem(makeCartKey(null));
 		}
 

@@ -28,7 +28,7 @@ const Alert = ({
 		<div
 			role='dialog'
 			aria-modal='true'
-			className='bg-black/40 fixed inset-0 flex items-center justify-center'
+			className='bg-black/40 fixed inset-0 flex items-center justify-center z-100'
 			onClick={onCancel}>
 			<div
 				className={`bg-white rounded-2xl p-6 min-w-80 text-center ${title ? "pt-6" : "pt-10"}`}
